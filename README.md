@@ -10,7 +10,7 @@ Drag to rotate, scroll to zoom, and click the gear buttons to watch a shift: sto
 
 These are layout models for checking spacing, ratios and power flow. They are not CAD files.
 
-## The three versions
+## The versions
 
 | Version | Layout | Motors | Outputs | Shifting |
 | --- | --- | --- | --- | --- |
@@ -19,6 +19,7 @@ These are layout models for checking spacing, ratios and power flow. They are no
 | [C](version-c-inline-4-improved/) | Same as B, refined | 4 NEO Vortex in a row | Flywheel, climber fast, climber strong | 1 servo + selector bar |
 | [D](version-d-hyperdrive/) | C plus a camshaft on top, planetary, cycloid, differential | 4 NEO Vortex in a row | Flywheel (2 speeds), 2 climb hooks, haul, boost, park | Servo camshaft, 7 positions, synchronizers |
 | [E](version-e-fgc/) | **FGC kit only**: pillow blocks on 15 mm extrusion | 2 HD Hex + UltraPlanetary 4:1 | Flywheel, climb fast, climb strong | 1 Smart Robot Servo + sliding 72T gear |
+| [F](version-f-dual-differential/) | **FGC kit only**: two spur differentials built from kit gears | 4 HD Hex + UltraPlanetary 5:1, in 2 groups | Flywheel and climber, separately or both at once | No shifter: the motor speeds pick the output. Servo is a hang lock |
 
 ## Ratios (NEO Vortex, 6,784 RPM free)
 
@@ -110,6 +111,42 @@ Version E is the one to build for FGC. It uses only parts from the FIRST Global 
 Shaft positions (mm, input shaft at 0,0): F (−38.25, 0), CF (73.88, 0), CS (43.10, −60), CS2 (106.85, −60), motors (0, ±33.75). Lanes along the shafts (mm from the front wall): motor gears 10, Flywheel 37, Neutral 54, Climb fast 71, Climb strong 88. The parts list and cut list are in the 3D page's panel.
 
 Based on the 2024 FIRST Global kit list ([REV BOM](https://revrobotics.com/content/docs/REV-45-1188_FIRST_Global_Kit_2024-Visual_BOM.pdf)); check your 2027 kit and the game manual's motor and modification rules before building.
+
+## Version F: FGC dual-differential (the "diffy" one)
+
+Version F uses 4 of the kit's HD Hex motors and **never shifts**. It works like a differential swerve module: two motor groups feed two differentials, and the speeds you give the groups decide which output turns.
+
+- **Group A** (2 HD Hex, 5:1 cartridges) drives shaft A. **Group B** (2 HD Hex) drives shaft B.
+- **Differential 1** gets A and B by gear, so its carrier turns at **(A + B) ÷ 2**. It drives the flywheel.
+- **Differential 2** gets A by gear but B by chain. A chain keeps the direction where a gear reverses it, so its carrier turns at **(B − A) ÷ 2**. It drives the climber.
+- Run A and B the same way: all 4 motors drive the flywheel, and differential 2's planets spin in place, so the climber stays still. Run them opposite ways: all 4 motors climb, and the flywheel stays still. Any mix runs both at once. Both outputs share one speed budget: |fly| + |climb| ≤ 100%.
+- **Spur-gear differentials from kit parts.** Each one has two 45T suns on separate half-shafts. Two 125T gears, drilled, act as the carrier plates. Three pairs of 30T planets sit between them: planet 1 meshes sun 1, planet 2 meshes sun 2, and the two planets mesh each other.
+- **Hang lock.** A Smart Robot Servo holds a polycarbonate pawl away from C2's 125T, and a rubber band pulls it in. When the robot is disabled at the end of the match the servo goes limp, the pawl drops in and the robot stays up.
+
+| Output | Gears | Ratio | Free speed | Stall torque (4 motors) |
+| --- | --- | --- | --- | --- |
+| Flywheel | diff 1 carrier 125T → 30T, 2 × 90 mm grip wheels | 1.26:1 | 4,779 RPM (22.5 m/s) | 0.39 Nm |
+| Climber | diff 2 carrier 125T → 125T, 2 × 30T → 2 × 125T, chain 15T → 26T, 25 mm spool | 37.8:1 | 159 RPM (0.21 m/s rope) | 10.5 Nm (≈43 kgf at half stall) |
+
+Shaft positions (mm, between the motor shafts A and B): A (−20.40, 0), B (20.40, 0), diff 1 (0, 50), diff 2 (0, −50), F (0, 108.13), C (93.75, −50), C2 (123.39, 0), spool S (123.39, 108.13). Lanes along the shafts (mm from the front wall): motor gears 10, A's 72T 30, front carrier 48, sun 1 66, middle 84, sun 2 102, rear carrier 120, B's 72T 138, chains 175 (behind the back wall). Every clearance was checked; the tightest is 3.5 mm, between the carriers and shafts A and B.
+
+Building it:
+
+1. Clamp two 125T gears together and drill them as a pair. Open the centre to the Through Bore Bearing's outside diameter and press a bearing in. Then drill 6 bearing holes on a 56.25 mm circle: 3 pairs 120° apart, with the 2 holes of a pair 22.5 mm apart.
+2. All 3 planet pairs mesh, because 120° steps land on whole sun teeth (checked in the model).
+3. Keep shafts A and B bare between the carriers, with no collars there.
+4. The climb stage uses two 30T and two 125T side by side, for 30 mm of tooth face.
+5. Run both groups with encoder velocity control, so the output that should be still doesn't creep:
+
+```java
+// fly, climb in -1..1 (|fly| + |climb| <= 1)
+double a = fly - climb, b = fly + climb;
+double s = Math.max(1, Math.max(Math.abs(a), Math.abs(b)));
+groupA1.setVelocity(a / s * 2800); groupA2.setVelocity(a / s * 2800);   // HD Hex: 28 counts per motor turn
+groupB1.setVelocity(b / s * 2800); groupB2.setVelocity(b / s * 2800);
+```
+
+It uses 49 gears (version E uses 9): 27 of the kit's 32 30T and 7 of its 8 125T. The full parts and cut lists are in the 3D page. If your kit has no 26T sprocket, chain 15T → 54T gives 78.5:1 instead (76 RPM, more pull).
 
 ## Parts
 

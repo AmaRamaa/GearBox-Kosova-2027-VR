@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>FGC Diffy Gearbox F</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one-screen workbench. 3D stage at left, mixer + kit list at right; stacks on phones. */
+:root {
+  --bg: #eef1f4;
+  --panel: #ffffff;
+  --stage: #e2e7ec;
+  --ink: #15202a;
+  --muted: #5b6976;
+  --line: #ccd4dc;
+  --accent: #d9480f;
+  --accent-soft: #fbe4d7;
+  --blue: #1971c2;
+  --steel: #3e464d;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Barlow", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0f151b; --panel: #151d25; --stage: #10181f; --ink: #e5ecf2; --muted: #93a1ae; --line: #2a3541; --accent: #ff7a3d; --accent-soft: #3a2217; --blue: #4dabf7; --steel: #8b959e; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0f151b; --panel: #151d25; --stage: #10181f; --ink: #e5ecf2; --muted: #93a1ae; --line: #2a3541; --accent: #ff7a3d; --accent-soft: #3a2217; --blue: #4dabf7; --steel: #8b959e; color-scheme: dark; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45; }
+.app { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 16px; padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); box-sizing: border-box; }
+.stage { position: relative; min-width: 0; min-height: 0; border-radius: 10px; overflow: hidden; background: var(--stage); border: 1px solid var(--line); }
+.stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.labels { position: absolute; inset: 0; pointer-events: none; }
+.tag { font-family: var(--font-data); font-size: 11px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+.tag.hot { border-color: var(--accent); color: var(--accent); }
+.legend { position: absolute; left: 12px; bottom: 12px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.sw.hot { background: var(--accent); } .sw.idle { background: var(--steel); }
+.stage-tools { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.panel { min-width: 0; overflow-y: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box; }
+.eyebrow { font-family: var(--font-data); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.05; margin: 4px 0 6px; text-wrap: balance; letter-spacing: .01em; }
+.lede { margin: 0; font-size: 14px; color: var(--muted); }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mode { text-align: left; font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; cursor: pointer; display: flex; flex-direction: column; gap: 1px; }
+.mode b { font-family: var(--font-display); font-size: 17px; font-weight: 600; letter-spacing: .02em; }
+.mode small { color: var(--muted); font-size: 12px; }
+.mode[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.mode[aria-pressed="true"] b { color: var(--accent); }
+.mode:hover { border-color: var(--muted); }
+button:focus-visible, input:focus-visible, svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mixer { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.pad { width: 150px; height: 150px; flex: none; cursor: crosshair; touch-action: none; border-radius: 8px; }
+.pad .area { fill: var(--accent-soft); stroke: var(--accent); stroke-width: .02; }
+.pad .axis { stroke: var(--line); stroke-width: .015; }
+.pad text { fill: var(--muted); font-family: var(--font-data); font-size: .13px; }
+.pad .dot { fill: var(--accent); }
+.pad .cur { fill: none; stroke: var(--ink); stroke-width: .025; }
+.meters { flex: 1; min-width: 170px; display: flex; flex-direction: column; gap: 8px; }
+.meter { display: grid; grid-template-columns: 62px 1fr 46px; align-items: center; gap: 8px; font-size: 12.5px; }
+.meter span { color: var(--muted); }
+.meter .track { position: relative; height: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+.meter .track::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--muted); }
+.meter .fill { position: absolute; top: 0; bottom: 0; background: var(--accent); }
+.meter.out .fill { background: var(--blue); }
+.meter strong { font-family: var(--font-data); font-weight: 600; font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+.status { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted); min-height: 38px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; margin-top: 6px; }
+.readout { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.cell { background: var(--panel); padding: 8px 10px; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.cell span { font-size: 12px; color: var(--muted); }
+.cell strong { font-family: var(--font-data); font-weight: 600; font-size: 15px; font-variant-numeric: tabular-nums; }
+.cell small { font-family: var(--font-data); font-size: 11.5px; color: var(--muted); }
+.eq { font-family: var(--font-data); font-size: 12.5px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; display: grid; gap: 3px; }
+.eq b { color: var(--accent); font-weight: 600; }
+details { border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+summary { cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 8px; }
+th, td { text-align: left; padding: 4px 6px 4px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 11.5px; }
+td.n, th.n { font-family: var(--font-data); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+td code { font-family: var(--font-data); font-size: 11px; color: var(--muted); }
+ol.steps { margin: 8px 0 0; padding-left: 18px; font-size: 13px; display: grid; gap: 6px; }
+pre.code { font-family: var(--font-data); font-size: 11.5px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; overflow-x: auto; margin: 8px 0 0; line-height: 1.5; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13.5px; }
+.tool { font: inherit; font-size: 12.5px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.tool:hover { border-color: var(--muted); }
+label.check { display: inline-flex; gap: 6px; align-items: center; font-size: 13.5px; cursor: pointer; }
+input[type="range"] { width: 150px; accent-color: var(--accent); }
+.controls { display: flex; flex-direction: column; gap: 10px; }
+.note { font-size: 12.5px; color: var(--muted); margin: 0; }
+.note b { color: var(--ink); font-weight: 600; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 13px; }
+.loading[hidden], .labels[hidden] { display: none; }
+@media (max-width: 900px) { html, body { height: auto; } .app { height: auto; grid-template-columns: minmax(0, 1fr); } .stage { height: min(62vh, 520px); } .panel { overflow: visible; } }
+</style>
+
+<div class="app">
+  <div class="stage" id="stage">
+    <div class="loading" id="loading">Loading 3D model…</div>
+    <div class="labels" id="labels"></div>
+    <div class="stage-tools">
+      <button class="tool" id="viewFront" type="button">Front view</button>
+      <button class="tool" id="viewBack" type="button">Back view</button>
+      <button class="tool" id="pause" type="button">Pause</button>
+      <button class="tool" id="resetView" type="button">Reset view</button>
+    </div>
+    <div class="legend"><span><i class="sw hot"></i>Turning</span><span><i class="sw idle"></i>Stopped</span></div>
+  </div>
+
+  <aside class="panel">
+    <div>
+      <div class="eyebrow">FIRST Global kit · REV DUO · version F</div>
+      <h1>FGC Dual-Differential Gearbox F</h1>
+      <p class="lede">4 motors and 2 differentials, with no shifter. The code picks the output: run both motor groups the same way for the flywheel, opposite ways for the climber, or mix the two.</p>
+    </div>
+
+    <section>
+      <h2>Presets</h2>
+      <div class="modes" role="group" aria-label="Presets">
+        <button class="mode" type="button" data-p="fly"><b>Flywheel</b><small>A = B · 4,779 RPM</small></button>
+        <button class="mode" type="button" data-p="climb"><b>Climb</b><small>A = −B · 159 RPM</small></button>
+        <button class="mode" type="button" data-p="both"><b>Shoot + climb</b><small>Both at half speed</small></button>
+        <button class="mode" type="button" data-p="lower"><b>Lower</b><small>Unwind at half speed</small></button>
+        <button class="mode" type="button" data-p="hold"><b>Hang lock</b><small>Motors off, pawl holds</small></button>
+        <button class="mode" type="button" data-p="stop"><b>Stop</b><small>Everything still</small></button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Mixer · drag the dot</h2>
+      <div class="mixer">
+        <svg class="pad" id="pad" viewBox="-1.3 -1.3 2.6 2.6" tabindex="0" role="application" aria-label="Mixer pad. Up is flywheel, right is climb. Arrow keys move the dot.">
+          <path class="area" d="M0 -1 L1 0 L0 1 L-1 0Z"/>
+          <line class="axis" x1="-1.2" y1="0" x2="1.2" y2="0"/><line class="axis" x1="0" y1="-1.2" x2="0" y2="1.2"/>
+          <text x="0.06" y="-1.1">flywheel</text><text x="0.06" y="1.2">reverse</text>
+          <text x="0.62" y="-0.08">climb</text><text x="-1.22" y="-0.08">lower</text>
+          <circle class="cur" id="padCur" r="0.1"/><circle class="dot" id="padDot" r="0.06"/>
+        </svg>
+        <div class="meters">
+          <div class="meter"><span>Group A</span><div class="track"><i class="fill" id="mA"></i></div><strong id="vA">0%</strong></div>
+          <div class="meter"><span>Group B</span><div class="track"><i class="fill" id="mB"></i></div><strong id="vB">0%</strong></div>
+          <div class="meter out"><span>Flywheel</span><div class="track"><i class="fill" id="mF"></i></div><strong id="vF">0%</strong></div>
+          <div class="meter out"><span>Climber</span><div class="track"><i class="fill" id="mC"></i></div><strong id="vC">0%</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="status" id="status"><i class="dot"></i><span id="statusText">Stopped</span></div>
+
+    <section>
+      <h2>Live output · 4 HD Hex, 5:1 cartridges</h2>
+      <div class="readout">
+        <div class="cell"><span>Flywheel</span><strong id="rF">0 RPM</strong><small id="rFs">0.0 m/s surface</small></div>
+        <div class="cell"><span>Climber spool</span><strong id="rC">0 RPM</strong><small id="rCs">0.00 m/s rope</small></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <div class="eq">
+        <div><b>Flywheel</b> = (A + B) ÷ 2 <span style="color:var(--muted)">· diff 1, both suns by gear</span></div>
+        <div><b>Climber</b> = (B − A) ÷ 2 <span style="color:var(--muted)">· diff 2, B's sun by chain</span></div>
+        <div style="color:var(--muted)">so A = fly − climb, B = fly + climb</div>
+      </div>
+      <p class="note" style="margin-top:8px">A gear mesh reverses direction and a chain doesn't. Differential 2 gets B through a chain, so it sees B with the opposite sign to differential 1. That one sign is the whole trick: when A and B match, differential 2's planets spin in place and its carrier stays still. When they are opposite, the same happens in differential 1.</p>
+    </section>
+
+    <section>
+      <h2>Ratios</h2>
+      <table>
+        <thead><tr><th>Output</th><th class="n">Ratio</th><th class="n">Free speed</th><th class="n">Stall, 4 motors</th></tr></thead>
+        <tbody>
+          <tr><td>Flywheel, 2 × 90 mm grip wheels</td><td class="n">1.26:1</td><td class="n">4,779 RPM<br>22.5 m/s</td><td class="n">0.39 Nm</td></tr>
+          <tr><td>Climber, 25 mm spool</td><td class="n">37.8:1</td><td class="n">159 RPM<br>0.21 m/s</td><td class="n">10.5 Nm<br>≈43 kgf at half stall</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:6px">Both outputs share one speed budget: |fly| + |climb| ≤ 100%. That is the diamond on the pad.</p>
+    </section>
+
+    <details>
+      <summary>Kit parts used</summary>
+      <table>
+        <thead><tr><th>Part</th><th>REV no.</th><th class="n">Qty</th></tr></thead>
+        <tbody>
+          <tr><td>UltraPlanetary Gearbox Kit &amp; HD Hex Motor (one 5:1 cartridge each)</td><td><code>REV-41-1600</code></td><td class="n">4</td></tr>
+          <tr><td>45 Tooth Plastic Gear (4 motor, 2 on A/B, 4 suns)</td><td><code>REV-41-1334</code></td><td class="n">10</td></tr>
+          <tr><td>72 Tooth Plastic Gear</td><td><code>REV-41-1336</code></td><td class="n">5</td></tr>
+          <tr><td>30 Tooth Plastic Gear (24 planets, 1 flywheel, 2 climb)</td><td><code>REV-41-1332</code></td><td class="n">27</td></tr>
+          <tr><td>125 Tooth Plastic Gear (4 drilled as carriers, 3 climb)</td><td><code>REV-41-1333</code></td><td class="n">7</td></tr>
+          <tr><td>#25 sprockets: 15T × 3, 26T × 1, plus #25 chain and master links</td><td><code>REV #25</code></td><td class="n">4</td></tr>
+          <tr><td>Smart Robot Servo, bracket, horn (hang-lock pawl)</td><td><code>REV-41-1097</code></td><td class="n">1</td></tr>
+          <tr><td>15mm Bearing Pillow Block</td><td><code>REV-41-1317</code></td><td class="n">16</td></tr>
+          <tr><td>Through Bore Bearing, Long (16 frame, 4 carrier hubs, 24 planets)</td><td><code>REV-41-1329</code></td><td class="n">44</td></tr>
+          <tr><td>5mm hex shaft, 400mm (cut) and 90mm</td><td><code>REV-41-1362/1348</code></td><td class="n">see cut list</td></tr>
+          <tr><td>15mm Extrusion 420mm (cut)</td><td><code>REV-41-1432</code></td><td class="n">16</td></tr>
+          <tr><td>Shaft Collars</td><td><code>REV-41-1327</code></td><td class="n">~44</td></tr>
+          <tr><td>90mm Grip Wheel (flywheel)</td><td><code>REV-41-1267</code></td><td class="n">2</td></tr>
+          <tr><td>30mm Round Belt Pulley (cord spool) + UHMWPE cord</td><td><code>REV-41-1344</code></td><td class="n">1</td></tr>
+          <tr><td>UltraPlanetary Flat Mounting Bracket</td><td><code>REV-41-1624</code></td><td class="n">4</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:8px">Uses 4 of the kit's 6 HD Hex motors, 27 of its 32 30T gears and 7 of its 8 125T gears. Check the counts against your own kit.</p>
+    </details>
+
+    <details>
+      <summary>Cut list</summary>
+      <table>
+        <thead><tr><th>Piece</th><th>From</th><th class="n">Length</th></tr></thead>
+        <tbody>
+          <tr><td>Shaft F (flywheel)</td><td>400mm hex</td><td class="n">240 mm</td></tr>
+          <tr><td>Shafts B, C2, S (chain out the back)</td><td>400mm hex</td><td class="n">197 mm × 3</td></tr>
+          <tr><td>Shafts A, C</td><td>400mm hex</td><td class="n">180 mm × 2</td></tr>
+          <tr><td>Planet shafts</td><td>400mm hex, 4 per stick</td><td class="n">96 mm × 12</td></tr>
+          <tr><td>Diff 1 rear half-shaft</td><td>90mm hex</td><td class="n">73 mm</td></tr>
+          <tr><td>Diff front half-shafts, diff 2 rear half-shaft</td><td>90mm hex, uncut</td><td class="n">90 mm × 3</td></tr>
+          <tr><td>Wall bars (top, bottom, 4 rows) × 2 walls</td><td>420mm extrusion</td><td class="n">247 mm × 12</td></tr>
+          <tr><td>Wall uprights</td><td>420mm extrusion</td><td class="n">245 mm × 4</td></tr>
+          <tr><td>Spacers between walls (from the 173 mm offcuts)</td><td>offcuts</td><td class="n">150 mm × 4</td></tr>
+          <tr><td>Servo bar</td><td>420mm extrusion</td><td class="n">150 mm × 1</td></tr>
+          <tr><td>Pawl, 3 layers bonded</td><td>1mm polycarbonate</td><td class="n">12 × 30 mm</td></tr>
+        </tbody>
+      </table>
+    </details>
+
+    <details>
+      <summary>Build notes</summary>
+      <ol class="steps">
+        <li><b>Make the carriers.</b> Clamp two 125T gears together and drill them as a pair so the holes line up. Open the centre hole to the bearing's outside diameter and press in a Through Bore Bearing, so the carrier spins on the half-shaft. Drill 6 bearing holes on a 56.25 mm circle: 3 pairs 120° apart, with the 2 holes of a pair 22.5 mm apart (47.2°).</li>
+        <li><b>Planets.</b> Each planet shaft carries two 30T gears. Planet 1 sits in the sun-1 lane and the middle lane; planet 2 sits in the middle lane and the sun-2 lane. Planet 1 meshes sun 1 and planet 2, and planet 2 meshes sun 2. Put a collar outside each carrier plate.</li>
+        <li><b>Stack it</b> front to back: half-shaft (72T + sun), carrier plate, planets, carrier plate, half-shaft (sun + 72T or sprocket). All 3 pairs drop in, because 120° steps land on whole sun teeth.</li>
+        <li><b>Keep A and B bare</b> between the carriers. The carriers clear those shafts by only 3.5 mm, so a collar there would rub.</li>
+        <li><b>Climb stage is doubled.</b> Two 30T on C drive two 125T on C2 side by side (30 mm of tooth face), because plastic teeth at climb torque need the extra width.</li>
+        <li><b>Hang lock is fail-safe.</b> A rubber band pulls the pawl into C2's 125T and the servo holds it out. When the robot is disabled at the end of the match, the servo goes limp and the pawl drops in. File the tip as a ratchet so the climber can still wind up with the pawl in.</li>
+        <li><b>Use velocity control.</b> Both groups must hold exact speeds or the "still" output creeps. HD Hex encoders give 28 counts per motor turn, so 2,800 counts/s at free speed:</li>
+      </ol>
+      <pre class="code">// fly, climb in -1..1 (|fly| + |climb| &lt;= 1)
+double a = fly - climb, b = fly + climb;
+double s = Math.max(1, Math.max(Math.abs(a), Math.abs(b)));
+groupA1.setVelocity(a / s * 2800); groupA2.setVelocity(a / s * 2800);
+groupB1.setVelocity(b / s * 2800); groupB2.setVelocity(b / s * 2800);</pre>
+    </details>
+
+    <section class="controls">
+      <h2>View</h2>
+      <div class="row"><label for="speed">Animation speed</label><input type="range" id="speed" min="0.2" max="3" step="0.1" value="1"></div>
+      <div class="row"><label class="check"><input type="checkbox" id="showFrame" checked> Frame</label><label class="check"><input type="checkbox" id="seeThru" checked> See-through carriers</label><label class="check"><input type="checkbox" id="showLabels" checked> Labels</label></div>
+    </section>
+
+    <p class="note">Compared with E: <b>twice the motors</b>, <b>no shift delay</b>, both outputs can run at once, and the servo moves to a hang lock instead of a shifter. The cost is more gears (49 against 9), two drilled carriers per differential, and the need for encoder velocity control. This is a layout model in millimetres, not a CAD file.</p>
+  </aside>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+const stageEl = document.getElementById('stage'), labelsEl = document.getElementById('labels');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- layout in millimetres. X across, Y up, Z from the front wall's inner face toward the back ----------
+const MOD = 0.75, FW = 15;                                  // REV plastic gears: module 0.75, 15 mm wide
+const cd = (a, b) => MOD * (a + b) / 2;
+const pol = (c, r, deg) => ({ x: c.x + r * Math.cos(deg * Math.PI / 180), y: c.y + r * Math.sin(deg * Math.PI / 180) });
+const P = {};
+P.D1 = { x: 0, y: 50 }; P.D2 = { x: 0, y: -50 };
+const ax = Math.sqrt(cd(72, 72) ** 2 - 50 ** 2);           // A and B sit 54 mm (72T + 72T) from both differentials
+P.A = { x: -ax, y: 0 }; P.B = { x: ax, y: 0 };
+P.F = { x: 0, y: 50 + cd(125, 30) };
+P.C = { x: cd(125, 125), y: -50 };
+P.C2 = { x: P.C.x + Math.sqrt(cd(30, 125) ** 2 - 50 ** 2), y: 0 };
+P.S = { x: P.C2.x, y: P.F.y };
+P.MA0 = pol(P.A, cd(45, 45), 150); P.MA1 = pol(P.A, cd(45, 45), 238);
+P.MB0 = pol(P.B, cd(45, 45), 30);  P.MB1 = pol(P.B, cd(45, 45), -58);
+const LANE = { mot: 10, inA: 30, car1: 48, s1: 66, mid: 84, s2: 102, car2: 120, inB: 138, chain: 175 };
+const WALL = { front: [-15, 0], back: [150, 165] };
+const R_PL = cd(45, 30), SPREAD = 2 * Math.asin(cd(30, 30) / (2 * R_PL));
+const PAWL = { x: P.C2.x + 30, y: P.C2.y + 52, z: LANE.s1 };
+
+// ---------- renderer ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+stageEl.prepend(renderer.domElement);
+const labelRenderer = new CSS2DRenderer({ element: labelsEl });
+const scene = new THREE.Scene();
+const root = new THREE.Group(); root.scale.setScalar(1 / 25.4); root.position.set(-2.2, -0.9, -2.0); scene.add(root);
+const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 200);
+const HOME = { pos: new THREE.Vector3(-17, 15, -20), target: new THREE.Vector3(0, 0, 0) };
+camera.position.copy(HOME.pos);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.copy(HOME.target); controls.enableDamping = true; controls.minDistance = 2; controls.maxDistance = 45;
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 1.6));
+const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(-8, 12, -10); scene.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 0.9); rim.position.set(10, -4, 12); scene.add(rim);
+function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+let accent = new THREE.Color('#d9480f');
+function applyTheme() { try { scene.background = new THREE.Color(cssVar('--stage') || '#e2e7ec'); accent = new THREE.Color(cssVar('--accent') || '#d9480f'); } catch (e) { /* defaults */ } recolor(); }
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+// ---------- materials ----------
+const BASE = { acetal: 0xe9e6dc, carrier: 0xd8d2c2, shaft: 0x9aa3ab, extr: 0x7d8790, block: 0x2d333a, motor: 0x2b3137, gearbox: 0x8b939b, sprocket: 0x30363d, chain: 0x5c636b, wheel: 0x3b4046, servo: 0x1f2328, poly: 0xcfe3f3, rope: 0xc9a86a, mark: 0xd9480f };
+const parts = {}, carrierMats = [];
+function mat(kind, extra = {}) { const m = new THREE.MeshStandardMaterial({ color: BASE[kind], metalness: ['acetal', 'carrier', 'wheel', 'rope', 'poly'].includes(kind) ? 0.05 : 0.55, roughness: kind === 'acetal' || kind === 'carrier' ? 0.55 : 0.4, ...extra }); m.userData.kind = kind; return m; }
+function reg(k, mesh) { (parts[k] ||= []).push(mesh); return mesh; }
+const hot = new Set();
+function recolor() {
+  for (const [k, list] of Object.entries(parts)) for (const m of list) {
+    const kind = m.material.userData.kind;
+    if (hot.has(k)) { m.material.color.copy(accent); m.material.emissive.copy(accent).multiplyScalar(0.15); }
+    else { m.material.color.setHex(BASE[kind]); m.material.emissive.setHex(0x000000); }
+  }
+}
+
+// ---------- builders ----------
+function teeth(N, rootR, tipR) {
+  const pts = [], p = (2 * Math.PI) / N;
+  for (let i = 0; i < N; i++) { const c = i * p; for (const [R, a] of [[rootR, c - 0.5 * p], [rootR, c - 0.27 * p], [tipR, c - 0.11 * p], [tipR, c + 0.11 * p], [rootR, c + 0.27 * p]]) pts.push(new THREE.Vector2(R * Math.cos(a), R * Math.sin(a))); }
+  return pts;
+}
+function hexPath(af = 5.2) { const r = af / Math.sqrt(3); const h = new THREE.Path(); for (let k = 0; k < 6; k++) { const a = (k / 6) * Math.PI * 2; if (k === 0) h.moveTo(r * Math.cos(a), r * Math.sin(a)); else h.lineTo(r * Math.cos(a), r * Math.sin(a)); } h.closePath(); return h; }
+function circ(r, cx = 0, cy = 0) { const h = new THREE.Path(); h.absarc(cx, cy, r, 0, Math.PI * 2, true); return h; }
+function extrude(shape, depth, z0) { const g = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 12 }); g.translate(0, 0, z0); return g; }
+function gearMesh(k, N, z) {
+  const r = MOD * N / 2;
+  const s = new THREE.Shape(teeth(N, r - 1.25 * MOD, r + MOD)); s.holes.push(hexPath());
+  if (N >= 45) for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2; s.holes.push(circ(r * 0.17, r * 0.55 * Math.cos(a), r * 0.55 * Math.sin(a))); }
+  return reg(k, new THREE.Mesh(extrude(s, FW, z - FW / 2), mat('acetal')));
+}
+function carrierMesh(k, z, holes) {                    // 125T gear, centre opened for a bearing, 6 planet bearing holes drilled
+  const r = MOD * 125 / 2;
+  const s = new THREE.Shape(teeth(125, r - 1.25 * MOD, r + MOD)); s.holes.push(circ(7));
+  for (const h of holes) s.holes.push(circ(4.6, h.x, h.y));
+  for (let i = 0; i < 3; i++) { const a = Math.PI / 2 + SPREAD / 2 + (i + 0.5) * 2 * Math.PI / 3; s.holes.push(circ(7, 30 * Math.cos(a), 30 * Math.sin(a))); }
+  const m = mat('carrier', { transparent: true, opacity: 0.38, depthWrite: false }); carrierMats.push(m);
+  return reg(k, new THREE.Mesh(extrude(s, FW, z - FW / 2), m));
+}
+function sprocketMesh(k, N, z) {                       // #25 chain: pitch 6.35 mm
+  const r = 6.35 / (2 * Math.sin(Math.PI / N));
+  const s = new THREE.Shape(teeth(N, r - 2.2, r + 1.6)); s.holes.push(hexPath());
+  return reg(k, new THREE.Mesh(extrude(s, 3, z - 1.5), mat('sprocket')));
+}
+const sprR = N => 6.35 / (2 * Math.sin(Math.PI / N));
+function cyl(r, len, kind, k) { const g = new THREE.CylinderGeometry(r, r, len, 40); g.rotateX(Math.PI / 2); const m = new THREE.Mesh(g, mat(kind)); if (k) reg(k, m); return m; }
+function hexMesh(k, z0, z1) {
+  const s = new THREE.Shape(); const r = 5 / Math.sqrt(3);
+  for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2; if (i === 0) s.moveTo(r * Math.cos(a), r * Math.sin(a)); else s.lineTo(r * Math.cos(a), r * Math.sin(a)); }
+  return reg(k, new THREE.Mesh(extrude(s, z1 - z0, z0), mat('shaft')));
+}
+function collarMesh(z) { const m = cyl(5.5, 5, 'block'); m.position.z = z; return m; }
+// a spinner is one hex shaft and everything fixed to it; its rotation.z is the shaft angle
+function spinner(k, pos, z0, z1) { const g = new THREE.Group(); g.position.set(pos.x, pos.y, 0); g.add(hexMesh(k, z0, z1)); root.add(g); g.userData.k = k; return g; }
+const frame = new THREE.Group(); root.add(frame);
+function bar(x0, y0, z0, x1, y1, z1) {
+  const b = new THREE.Mesh(new THREE.BoxGeometry(Math.abs(x1 - x0) || 15, Math.abs(y1 - y0) || 15, Math.abs(z1 - z0) || 15), mat('extr'));
+  b.position.set((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2); frame.add(b); return b;
+}
+function pillow(pos, z0) {                             // bearing pillow block on the row bar under the shaft
+  const m = new THREE.Mesh(new THREE.BoxGeometry(22, 16.5, 15), mat('block')); m.position.set(pos.x, pos.y + 0.75, z0 + 7.5); frame.add(m);
+  const b = cyl(5, 15.5, 'shaft'); b.position.set(pos.x, pos.y, z0 + 7.5); frame.add(b);
+}
+function label(text, x, y, z) { const el = document.createElement('div'); el.className = 'tag'; el.textContent = text; const o = new CSS2DObject(el); o.position.set(x, y, z); root.add(o); return o; }
+
+// ---------- frame: two walls of 15 mm extrusion, 4 shaft rows, pillow blocks at the gear centre distances ----------
+const X0 = -70, X1 = 177.5, Y0 = -105, Y1 = 125;
+const ROWS = [P.F.y, 50, 0, -50];
+const WALLSHAFTS = { front: ['A', 'B', 'D1', 'D2', 'F', 'C', 'C2', 'S'], back: ['A', 'B', 'D1', 'D2', 'F', 'C', 'C2', 'S'] };
+for (const side of ['front', 'back']) {
+  const [z0, z1] = WALL[side];
+  bar(X0, Y1 - 7.5, z0, X1, Y1 + 7.5, z1); bar(X0, Y0 - 7.5, z0, X1, Y0 + 7.5, z1);
+  for (const y of ROWS) bar(X0, y - 22.5, z0, X1, y - 7.5, z1);
+  bar(X0 - 15, Y0 - 7.5, z0, X0, Y1 + 7.5, z1); bar(X1, Y0 - 7.5, z0, X1 + 15, Y1 + 7.5, z1);
+  for (const k of WALLSHAFTS[side]) pillow(P[k], z0);
+}
+for (const [x, y] of [[X0 - 7.5, Y1], [X1 + 7.5, Y1], [X0 - 7.5, Y0], [X1 + 7.5, Y0]]) bar(x - 7.5, y - 7.5, 0, x + 7.5, y + 7.5, 150);
+
+// ---------- motors: group A (2 × HD Hex) on shaft A, group B on shaft B ----------
+const motors = {};
+for (const k of ['MA0', 'MA1', 'MB0', 'MB1']) {
+  const grp = k[1];
+  const gb = new THREE.Mesh(new THREE.BoxGeometry(36, 36, 44), mat('gearbox')); gb.position.set(P[k].x, P[k].y, -18 - 22); root.add(gb);
+  const mot = cyl(18, 52, 'motor'); mot.position.set(P[k].x, P[k].y, -18 - 44 - 26); root.add(mot);
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(50, 42, 3), mat('extr')); plate.position.set(P[k].x, P[k].y, -16.5); frame.add(plate);
+  const s = spinner(grp, P[k], -18, 20); s.add(gearMesh(grp, 45, LANE.mot)); motors[k] = s;
+}
+const sA = spinner('A', P.A, -15, 165); sA.add(gearMesh('A', 45, LANE.mot), gearMesh('A', 72, LANE.inA), collarMesh(LANE.inA + 10), collarMesh(LANE.mot - 10));
+const sB = spinner('B', P.B, -15, 182); sB.add(gearMesh('B', 45, LANE.mot), gearMesh('B', 72, LANE.inB), sprocketMesh('B', 15, LANE.chain), collarMesh(LANE.inB - 10), collarMesh(LANE.mot - 10));
+
+// ---------- the two differentials ----------
+function buildDiff(id, D, rearSprocket) {
+  const front = spinner(id === 'D1' ? 'A' : 'A', D, -15, 76); front.add(gearMesh('A', 72, LANE.inA), gearMesh('A', 45, LANE.s1));
+  const rear = spinner('B', D, 92, rearSprocket ? 182 : 165); rear.add(gearMesh('B', 45, LANE.s2));
+  rear.add(rearSprocket ? sprocketMesh('B', 15, LANE.chain) : gearMesh('B', 72, LANE.inB));
+  const car = new THREE.Group(); car.position.set(D.x, D.y, 0); root.add(car);
+  const pairs = [], holes = [];
+  for (let i = 0; i < 3; i++) {
+    const b = Math.PI / 2 + i * 2 * Math.PI / 3;
+    const p1 = { x: R_PL * Math.cos(b), y: R_PL * Math.sin(b) }, p2 = { x: R_PL * Math.cos(b + SPREAD), y: R_PL * Math.sin(b + SPREAD) };
+    holes.push(p1, p2);
+    const g1 = new THREE.Group(); g1.position.set(p1.x, p1.y, 0); g1.add(gearMesh(id + 'p', 30, LANE.s1), gearMesh(id + 'p', 30, LANE.mid), hexMesh(id + 'p', 36, 132)); car.add(g1);
+    const g2 = new THREE.Group(); g2.position.set(p2.x, p2.y, 0); g2.add(gearMesh(id + 'p', 30, LANE.mid), gearMesh(id + 'p', 30, LANE.s2), hexMesh(id + 'p', 36, 132)); car.add(g2);
+    pairs.push({ p1, p2, g1, g2 });
+  }
+  for (const z of [LANE.car1, LANE.car2]) {
+    car.add(carrierMesh(id + 'c', z, holes));
+    for (const h of [{ x: 0, y: 0 }, ...holes]) { const b = cyl(h.x || h.y ? 4.6 : 7, 15.6, 'shaft'); b.position.set(h.x, h.y, z); car.add(b); }
+    for (const h of holes) for (const dz of [-10, 10]) if ((z === LANE.car1) === (dz < 0)) { const c = collarMesh(z + dz); c.position.x = h.x; c.position.y = h.y; car.add(c); }
+  }
+  return { id, D, front, rear, car, pairs, alpha: 0 };
+}
+const D1 = buildDiff('D1', P.D1, false);
+const D2 = buildDiff('D2', P.D2, true);
+
+// ---------- outputs ----------
+// flywheel: 30T on F meshes diff 1's front carrier plate; two 90 mm grip wheels behind the back wall
+const sF = spinner('D1c', P.F, -15, 225); sF.add(gearMesh('D1c', 30, LANE.car1));
+for (const z of [192, 214]) { const w = cyl(45, 18, 'wheel', 'D1c'); w.position.z = z; sF.add(w); }
+{ const mk = new THREE.Mesh(new THREE.BoxGeometry(8, 4, 40), mat('mark')); mk.position.set(0, 44, 203); sF.add(mk); }
+// climber: 125T on C meshes diff 2's carrier; C's two 30T drive two 125T on C2; chain 15T -> 26T to the spool shaft S
+const sC = spinner('D2c', P.C, -15, 165); sC.add(gearMesh('D2c', 125, LANE.car1), gearMesh('D2c', 30, LANE.s1), gearMesh('D2c', 30, LANE.mid));
+const sC2 = spinner('D2c', P.C2, -15, 182); sC2.add(gearMesh('D2c', 125, LANE.s1), gearMesh('D2c', 125, LANE.mid), sprocketMesh('D2c', 15, LANE.chain));
+const sS = spinner('D2c', P.S, -15, 182); sS.add(sprocketMesh('D2c', 26, LANE.chain), reg('D2c', cyl(12.5, 30, 'acetal')));
+sS.children.at(-1).position.z = 85;
+for (const z of [68, 102]) { const f = cyl(20, 3, 'acetal'); f.position.z = z; sS.add(f); }
+{ const mk = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 30), mat('mark')); mk.position.set(0, 12.5, 85); sS.add(mk); }
+{ const rope = cyl(0.8, 110, 'rope'); rope.rotation.x = Math.PI / 2; rope.position.set(P.S.x + 12.5, P.S.y + 55, 85); root.add(rope); }
+
+// chains (open-belt tangents)
+function chain(k, c1, r1, c2, r2, z) {
+  const dx = c2.x - c1.x, dy = c2.y - c1.y, L = Math.hypot(dx, dy), d = { x: dx / L, y: dy / L }, n = { x: -d.y, y: d.x };
+  const sg = (r1 - r2) / L, cg = Math.sqrt(1 - sg * sg), m = mat('chain');
+  for (const s of [-1, 1]) {
+    const u = { x: d.x * sg + s * n.x * cg, y: d.y * sg + s * n.y * cg };
+    const a = new THREE.Vector3(c1.x + r1 * u.x, c1.y + r1 * u.y, z), b = new THREE.Vector3(c2.x + r2 * u.x, c2.y + r2 * u.y, z);
+    const seg = reg(k, new THREE.Mesh(new THREE.BoxGeometry(2.5, a.distanceTo(b), 3.5), m));
+    seg.position.copy(a).add(b).multiplyScalar(0.5); seg.rotation.z = Math.atan2(-(b.x - a.x), b.y - a.y); root.add(seg);
+  }
+  for (const [c, r] of [[c1, r1], [c2, r2]]) { const t = reg(k, new THREE.Mesh(new THREE.TorusGeometry(r, 1.4, 6, 48), m)); t.position.set(c.x, c.y, z); root.add(t); }
+}
+chain('B', P.B, sprR(15), P.D2, sprR(15), LANE.chain);
+chain('D2c', P.C2, sprR(15), P.S, sprR(26), LANE.chain);
+
+// ---------- hang lock: Smart Robot Servo on a bar between the walls, polycarbonate pawl into C2's front 125T ----------
+bar(PAWL.x - 7.5, PAWL.y + 22, 0, PAWL.x + 7.5, PAWL.y + 37, 150);
+const servoBody = new THREE.Mesh(new THREE.BoxGeometry(20, 41, 37), mat('servo')); servoBody.position.set(PAWL.x, PAWL.y + 8, PAWL.z + 30); root.add(servoBody);
+const pawl = new THREE.Group(); pawl.position.set(PAWL.x, PAWL.y, PAWL.z); root.add(pawl);
+{ const hub = cyl(5, 8, 'poly'); pawl.add(hub);
+  const arm = new THREE.Mesh(new THREE.BoxGeometry(15, 6, 4), mat('poly')); arm.position.x = 7.5; pawl.add(arm);
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(3.2, 5, 4), mat('poly')); tip.rotation.z = -Math.PI / 2; tip.position.x = 16; pawl.add(tip);
+  const shaftP = hexMesh('', PAWL.z - 6, PAWL.z + 14); shaftP.position.set(0, 0, -PAWL.z); pawl.add(shaftP); }
+const PAWL_IN = Math.atan2(P.C2.y - PAWL.y, P.C2.x - PAWL.x), PAWL_OUT = PAWL_IN + 0.9;
+
+const tags = {
+  A: label('Group A · 2 × HD Hex', P.A.x - 40, -62, -70),
+  B: label('Group B · 2 × HD Hex', P.B.x + 40, 50, -70),
+  D1: label('Differential 1 → flywheel', -62, 92, LANE.mid),
+  D2: label('Differential 2 → climber', -62, -100, LANE.mid),
+  F: label('Flywheel · 2 × 90 mm grip wheels', 0, 162, 203),
+  ch: label('Chain keeps B\'s direction', 22, -40, LANE.chain + 6),
+  C: label('Spool · chain 15T→26T', P.S.x, P.S.y + 45, LANE.chain),
+  pawl: label('Hang-lock pawl (servo)', PAWL.x + 20, PAWL.y + 52, PAWL.z),
+};
+
+// ---------- kinematics ----------
+function meshAngle(a1, n1, n2, c1, c2) { const th = Math.atan2(c2.y - c1.y, c2.x - c1.x), k = n1 / n2; return -k * a1 + th + Math.PI + k * th - Math.PI / n2; }
+const O = { x: 0, y: 0 };
+function diffPose(df, s1, s2) {                        // spur differential: carrier = mean of the two suns
+  const phi = (s1 + s2) / 2 + df.alpha, psi = s1 - phi;
+  return { phi, rot: df.pairs.map(p => { const r1 = meshAngle(psi, 45, 30, O, p.p1); return [r1, meshAngle(r1, 30, 30, p.p1, p.p2)]; }) };
+}
+function sunAngles(thA, thB) {
+  return { d1s1: meshAngle(thA, 72, 72, P.A, P.D1), d1s2: meshAngle(thB, 72, 72, P.B, P.D1),
+           d2s1: meshAngle(thA, 72, 72, P.A, P.D2), d2s2: thB };          // chain: same direction, 15T to 15T
+}
+// pick each carrier's assembly angle so planet 2 meets sun 2 tooth-to-gap (rotating the carrier by d moves sun 2's phase by 2d)
+function calibrate(df, s1, s2) {
+  df.alpha = 0; const pose = diffPose(df, s1, s2), p = df.pairs[0];
+  const s2d = pose.phi + meshAngle(pose.rot[0][1], 30, 45, p.p2, O);
+  df.alpha = (s2 - s2d) / 2;
+}
+{ const s = sunAngles(0, 0); calibrate(D1, s.d1s1, s.d1s2); calibrate(D2, s.d2s1, s.d2s2); }
+window.__view = (x, y, z, tx = 0, ty = 0, tz = 0) => { camera.position.set(x, y, z); controls.target.set(tx, ty, tz); controls.update(); };
+window.__meshCheck = () => {                            // every pair: sun-2 angle implied by planet 2 vs actual, in teeth (should be whole numbers)
+  const out = []; for (const [thA, thB] of [[0, 0], [1.3, -0.4], [5, 2.2]]) { const s = sunAngles(thA, thB);
+    for (const [df, s1, s2] of [[D1, s.d1s1, s.d1s2], [D2, s.d2s1, s.d2s2]]) { const pose = diffPose(df, s1, s2);
+      df.pairs.forEach((p, i) => { const s2d = pose.phi + meshAngle(pose.rot[i][1], 30, 45, p.p2, O); out.push(((s2d - s2) / (2 * Math.PI / 45))); }); } }
+  return out;
+};
+
+// ---------- state ----------
+const st = { f: 0, c: 0, ft: 0, ct: 0, thA: 0, thB: 0, paused: false, lock: false, pawl: PAWL_OUT, preset: 'stop' };
+const PRESETS = { fly: [1, 0, false], climb: [0, 1, false], both: [0.5, 0.5, false], lower: [0, -0.5, false], hold: [0, 0, true], stop: [0, 0, false] };
+function setTarget(f, c, lock, preset) {
+  const s = Math.abs(f) + Math.abs(c); if (s > 1) { f /= s; c /= s; }
+  st.ft = f; st.ct = c; st.lock = lock && Math.abs(c) < 0.02; st.preset = preset || null;
+  document.querySelectorAll('.mode').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.p === st.preset)));
+  padDot.setAttribute('cx', c.toFixed(3)); padDot.setAttribute('cy', (-f).toFixed(3));
+}
+const HOT_T = 0.03;
+let lastHot = '';
+function updateHot() {
+  const A = st.f - st.c, B = st.f + st.c, on = { A: Math.abs(A) > HOT_T, B: Math.abs(B) > HOT_T, D1c: Math.abs(st.f) > HOT_T, D2c: Math.abs(st.c) > HOT_T, D1p: Math.abs(st.c) > HOT_T, D2p: Math.abs(st.f) > HOT_T };
+  const sig = Object.values(on).join(); if (sig === lastHot) return; lastHot = sig;
+  hot.clear(); for (const [k, v] of Object.entries(on)) if (v) hot.add(k); recolor();
+  tags.A.element.classList.toggle('hot', on.A); tags.B.element.classList.toggle('hot', on.B);
+  tags.F.element.classList.toggle('hot', on.D1c); tags.D1.element.classList.toggle('hot', on.D1c);
+  tags.C.element.classList.toggle('hot', on.D2c); tags.D2.element.classList.toggle('hot', on.D2c);
+}
+const VIS = 0.45 * Math.PI * 2;                         // shaft A/B at full speed: 0.45 turn per second on screen (slowed for viewing)
+function step(dt) {
+  const k = reduceMotion ? 1 : 1 - Math.exp(-dt / 0.3);
+  st.f += (st.ft - st.f) * k; st.c += (st.ct - st.c) * k;
+  if (Math.abs(st.ft - st.f) < 0.004) st.f = st.ft; if (Math.abs(st.ct - st.c) < 0.004) st.c = st.ct;
+  const speed = Number(document.getElementById('speed').value) || 1;
+  if (!st.paused) { st.thA += VIS * speed * (st.f - st.c) * dt; st.thB += VIS * speed * (st.f + st.c) * dt; }
+  for (const k2 of ['MA0', 'MA1']) motors[k2].rotation.z = meshAngle(st.thA, 45, 45, P.A, P[k2]);
+  for (const k2 of ['MB0', 'MB1']) motors[k2].rotation.z = meshAngle(st.thB, 45, 45, P.B, P[k2]);
+  sA.rotation.z = st.thA; sB.rotation.z = st.thB;
+  const s = sunAngles(st.thA, st.thB);
+  for (const [df, s1, s2] of [[D1, s.d1s1, s.d1s2], [D2, s.d2s1, s.d2s2]]) {
+    df.front.rotation.z = s1; df.rear.rotation.z = s2;
+    const pose = diffPose(df, s1, s2); df.car.rotation.z = pose.phi;
+    df.pairs.forEach((p, i) => { p.g1.rotation.z = pose.rot[i][0]; p.g2.rotation.z = pose.rot[i][1]; });
+    df.phi = pose.phi;
+  }
+  sF.rotation.z = meshAngle(D1.phi, 125, 30, P.D1, P.F);
+  sC.rotation.z = meshAngle(D2.phi, 125, 125, P.D2, P.C);
+  sC2.rotation.z = meshAngle(sC.rotation.z, 30, 125, P.C, P.C2);
+  sS.rotation.z = sC2.rotation.z * 15 / 26;
+  // pawl: servo holds it out while the climber moves; rubber band pulls it in for the hang lock
+  const want = st.lock && Math.abs(st.c) < 0.02 ? PAWL_IN : PAWL_OUT;
+  st.pawl += (want - st.pawl) * (reduceMotion ? 1 : 1 - Math.exp(-dt / 0.12)); pawl.rotation.z = st.pawl;
+  updateHot(); updatePanel();
+}
+
+// ---------- panel ----------
+const padEl = document.getElementById('pad'), padDot = document.getElementById('padDot'), padCur = document.getElementById('padCur');
+const $ = id => document.getElementById(id);
+function meter(id, vid, v) { const el = $(id), w = Math.min(1, Math.abs(v)) * 50; el.style.left = (v >= 0 ? 50 : 50 - w) + '%'; el.style.width = w + '%'; const t = `${Math.round(v * 100)}%`; if ($(vid).textContent !== t) $(vid).textContent = t; }
+function setText(id, t) { const e = $(id); if (e.textContent !== t) e.textContent = t; }
+function updatePanel() {
+  const A = st.f - st.c, B = st.f + st.c;
+  meter('mA', 'vA', A); meter('mB', 'vB', B); meter('mF', 'vF', st.f); meter('mC', 'vC', st.c);
+  padCur.setAttribute('cx', st.c.toFixed(3)); padCur.setAttribute('cy', (-st.f).toFixed(3));
+  const rpmF = st.f * 4779, rpmC = st.c * 159;
+  setText('rF', `${Math.round(rpmF).toLocaleString('en-US')} RPM`); setText('rFs', `${(Math.abs(rpmF) * Math.PI * 0.09 / 60).toFixed(1)} m/s surface`);
+  setText('rC', `${Math.round(rpmC)} RPM`); setText('rCs', `${(rpmC * Math.PI * 0.025 / 60).toFixed(2)} m/s rope${rpmC < -0.5 ? ' (lowering)' : ''}`);
+  const af = Math.abs(st.ft), ac = Math.abs(st.ct);
+  let t;
+  if (af < 0.02 && ac < 0.02) t = st.lock ? 'Hang lock: motors off, and the pawl is in C2\'s 125T. A rubber band holds it in even when the robot is disabled.' : 'Stopped. Both motor groups are still.';
+  else if (ac < 0.02) t = 'A and B turn together, so all 4 motors drive the flywheel. Differential 2\'s planets spin in place and its carrier, the climber, stays still.';
+  else if (af < 0.02) t = `A and B turn opposite ways, so all 4 motors drive the climber${st.ct < 0 ? ' backwards (lowering)' : ''}. Differential 1's planets spin in place and its carrier, the flywheel, stays still.`;
+  else t = `Power split: A and B run at different speeds, so both outputs turn. Flywheel ${Math.round(st.ft * 100)}%, climber ${Math.round(st.ct * 100)}% of free speed.`;
+  setText('statusText', t);
+}
+function padPoint(e) {
+  const r = padEl.getBoundingClientRect(); const x = ((e.clientX - r.left) / r.width) * 2.6 - 1.3, y = ((e.clientY - r.top) / r.height) * 2.6 - 1.3;
+  setTarget(-y, x, st.lock && x >= 0, null);
+}
+let dragging = false;
+padEl.addEventListener('pointerdown', e => { dragging = true; padEl.setPointerCapture(e.pointerId); padPoint(e); });
+padEl.addEventListener('pointermove', e => { if (dragging) padPoint(e); });
+padEl.addEventListener('pointerup', () => { dragging = false; });
+padEl.addEventListener('keydown', e => {
+  const d = { ArrowUp: [0.05, 0], ArrowDown: [-0.05, 0], ArrowRight: [0, 0.05], ArrowLeft: [0, -0.05] }[e.key];
+  if (!d) return; e.preventDefault(); setTarget(st.ft + d[0], st.ct + d[1], false, null);
+});
+document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => { const [f, c, l] = PRESETS[b.dataset.p]; setTarget(f, c, l, b.dataset.p); }));
+$('showFrame').addEventListener('change', e => { frame.visible = e.target.checked; });
+$('showLabels').addEventListener('change', e => { labelsEl.hidden = !e.target.checked; });
+$('seeThru').addEventListener('change', e => { for (const m of carrierMats) { m.transparent = e.target.checked; m.opacity = e.target.checked ? 0.38 : 1; m.depthWrite = !e.target.checked; m.needsUpdate = true; } });
+$('pause').addEventListener('click', e => { st.paused = !st.paused; e.currentTarget.textContent = st.paused ? 'Play' : 'Pause'; });
+$('resetView').addEventListener('click', () => { camera.position.copy(HOME.pos); controls.target.copy(HOME.target); controls.update(); });
+$('viewFront').addEventListener('click', () => { camera.position.set(0, 0, -19); controls.target.set(0, 0, 0); controls.update(); });
+$('viewBack').addEventListener('click', () => { camera.position.set(0, 0, 19); controls.target.set(0, 0, 0); controls.update(); });
+
+function resize() { const w = stageEl.clientWidth, h = stageEl.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); labelRenderer.setSize(w, h); camera.aspect = w / h; camera.fov = w < 520 ? 50 : 36; camera.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(stageEl);
+resize(); applyTheme();
+if (stageEl.clientWidth < 520) { labelsEl.hidden = true; $('showLabels').checked = false; }
+setTarget(1, 0, false, 'fly');
+document.getElementById('loading').hidden = true;
+const clock = new THREE.Clock();
+(function frameLoop() { const dt = Math.min(clock.getDelta(), 0.05); step(dt); controls.update(); renderer.render(scene, camera); labelRenderer.render(scene, camera); requestAnimationFrame(frameLoop); })();
+</script>
