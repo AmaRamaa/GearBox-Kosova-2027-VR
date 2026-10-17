@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>FGC Gearbox E</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one-screen workbench. 3D stage at left, shifter + kit list at right; stacks on phones. */
+:root {
+  --bg: #eef1f4;
+  --panel: #ffffff;
+  --stage: #e2e7ec;
+  --ink: #15202a;
+  --muted: #5b6976;
+  --line: #ccd4dc;
+  --accent: #d9480f;
+  --accent-soft: #fbe4d7;
+  --steel: #3e464d;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Barlow", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0f151b; --panel: #151d25; --stage: #10181f; --ink: #e5ecf2; --muted: #93a1ae; --line: #2a3541; --accent: #ff7a3d; --accent-soft: #3a2217; --steel: #8b959e; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0f151b; --panel: #151d25; --stage: #10181f; --ink: #e5ecf2; --muted: #93a1ae; --line: #2a3541; --accent: #ff7a3d; --accent-soft: #3a2217; --steel: #8b959e; color-scheme: dark; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45; }
+.app { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); box-sizing: border-box; }
+.stage { position: relative; min-width: 0; min-height: 0; border-radius: 10px; overflow: hidden; background: var(--stage); border: 1px solid var(--line); }
+.stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.labels { position: absolute; inset: 0; pointer-events: none; }
+.tag { font-family: var(--font-data); font-size: 11px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+.tag.hot { border-color: var(--accent); color: var(--accent); }
+.legend { position: absolute; left: 12px; bottom: 12px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.sw.hot { background: var(--accent); } .sw.idle { background: var(--steel); }
+.stage-tools { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.panel { min-width: 0; overflow-y: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box; }
+.eyebrow { font-family: var(--font-data); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.05; margin: 4px 0 0; text-wrap: balance; letter-spacing: .01em; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mode { text-align: left; font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+.mode b { font-family: var(--font-display); font-size: 18px; font-weight: 600; letter-spacing: .02em; }
+.mode small { color: var(--muted); font-size: 12.5px; }
+.mode[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.mode[aria-pressed="true"] b { color: var(--accent); }
+.mode:hover { border-color: var(--muted); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.status.busy .dot { animation: blink .6s infinite alternate; }
+@keyframes blink { from { opacity: 1 } to { opacity: .25 } }
+.readout { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.cell { background: var(--panel); padding: 9px 10px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cell span { font-size: 12px; color: var(--muted); }
+.cell strong { font-family: var(--font-data); font-weight: 600; font-size: 15.5px; font-variant-numeric: tabular-nums; }
+.lanes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 4px; }
+.lanes i { font-style: normal; font-family: var(--font-data); font-size: 11px; text-align: center; padding: 3px 0; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); }
+.lanes i.on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.cell.wide { grid-column: 1 / -1; }
+.path { display: flex; flex-wrap: wrap; gap: 4px 2px; align-items: center; font-family: var(--font-data); font-size: 12px; }
+.path .p { border: 1px solid var(--accent); color: var(--accent); border-radius: 4px; padding: 1px 6px; }
+.path .a { color: var(--muted); padding: 0 2px; }
+.path .none { color: var(--muted); }
+details { border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+summary { cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 8px; }
+th, td { text-align: left; padding: 4px 6px 4px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 11.5px; }
+td.n { font-family: var(--font-data); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+td code { font-family: var(--font-data); font-size: 11px; color: var(--muted); }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13.5px; }
+.tool { font: inherit; font-size: 12.5px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.tool:hover { border-color: var(--muted); }
+label.check { display: inline-flex; gap: 6px; align-items: center; font-size: 13.5px; cursor: pointer; }
+input[type="range"] { width: 150px; accent-color: var(--accent); }
+.controls { display: flex; flex-direction: column; gap: 10px; }
+.note { font-size: 12.5px; color: var(--muted); margin: 0; }
+.note b { color: var(--ink); font-weight: 600; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 13px; }
+@media (max-width: 900px) { html, body { height: auto; } .app { height: auto; grid-template-columns: minmax(0, 1fr); } .stage { height: min(62vh, 500px); } .panel { overflow: visible; } }
+@media (prefers-reduced-motion: reduce) { .status.busy .dot { animation: none; } }
+</style>
+
+<div class="app">
+  <div class="stage" id="stage">
+    <div class="loading" id="loading">Loading 3D model…</div>
+    <div class="labels" id="labels"></div>
+    <div class="stage-tools">
+      <button class="tool" id="viewFront" type="button">Front view</button>
+      <button class="tool" id="viewSide" type="button">Side view</button>
+      <button class="tool" id="pause" type="button">Pause</button>
+      <button class="tool" id="resetView" type="button">Reset view</button>
+    </div>
+    <div class="legend"><span><i class="sw hot"></i>Turning</span><span><i class="sw idle"></i>Stopped</span></div>
+  </div>
+
+  <aside class="panel">
+    <div>
+      <div class="eyebrow">FIRST Global kit · REV DUO · version E</div>
+      <h1>FGC Sliding-Gear Gearbox E</h1>
+    </div>
+
+    <section>
+      <h2>Shifter position</h2>
+      <div class="modes" role="group" aria-label="Shifter position">
+        <button class="mode" type="button" id="m-F" data-mode="F" aria-pressed="true"><b>Flywheel</b><small>1.51:1 · 3,979 RPM</small></button>
+        <button class="mode" type="button" id="m-N" data-mode="N" aria-pressed="false"><b>Neutral</b><small>Slider meshes nothing</small></button>
+        <button class="mode" type="button" id="m-CF" data-mode="CF" aria-pressed="false"><b>Climb fast</b><small>22.6:1 · 265 RPM</small></button>
+        <button class="mode" type="button" id="m-CS" data-mode="CS" aria-pressed="false"><b>Climb strong</b><small>62.8:1 · 96 RPM</small></button>
+      </div>
+    </section>
+
+    <div class="status" id="status"><i class="dot"></i><span id="statusText">Meshed · Flywheel</span></div>
+
+    <section>
+      <h2>Output · 2 HD Hex motors, 4:1 cartridges</h2>
+      <div class="readout">
+        <div class="cell"><span>Overall ratio</span><strong id="rRatio">1.51 : 1</strong></div>
+        <div class="cell"><span>Free speed</span><strong id="rRpm">3,979 RPM</strong></div>
+        <div class="cell"><span>Stall torque</span><strong id="rTq">0.27 Nm</strong></div>
+        <div class="cell"><span id="rXL">Surface, 90 mm wheel</span><strong id="rX">18.8 m/s</strong></div>
+        <div class="cell wide"><span>Sliding 72T gear (moved by one Smart Robot Servo)</span><div class="lanes" id="lanes"><i>Flywheel</i><i>Neutral</i><i>Fast</i><i>Strong</i></div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Power path</h2>
+      <div class="path" id="path"></div>
+    </section>
+
+    <details open>
+      <summary>Kit parts used</summary>
+      <table>
+        <thead><tr><th>Part</th><th>REV no.</th><th class="n">Qty</th></tr></thead>
+        <tbody>
+          <tr><td>UltraPlanetary Gearbox Kit &amp; HD Hex Motor (one 4:1 cartridge each)</td><td><code>REV-41-1600</code></td><td class="n">2</td></tr>
+          <tr><td>45 Tooth Plastic Gear</td><td><code>REV-41-1334</code></td><td class="n">4</td></tr>
+          <tr><td>72 Tooth Plastic Gear (the slider)</td><td><code>REV-41-1336</code></td><td class="n">1</td></tr>
+          <tr><td>30 Tooth Plastic Gear</td><td><code>REV-41-1332</code></td><td class="n">1</td></tr>
+          <tr><td>125 Tooth Plastic Gear</td><td><code>REV-41-1333</code></td><td class="n">3</td></tr>
+          <tr><td>15T and 54T #25 sprockets, #25 chain, master links</td><td><code>REV-41-1339/1341/1365/1366</code></td><td class="n">2 + 2</td></tr>
+          <tr><td>Smart Robot Servo, servo bracket, aluminium horn</td><td><code>REV-41-1097/1319/1828</code></td><td class="n">1 each</td></tr>
+          <tr><td>15mm Plastic Motion Bracket (slider carriage)</td><td><code>REV-41-1303</code></td><td class="n">2</td></tr>
+          <tr><td>15mm Bearing Pillow Block</td><td><code>REV-41-1317</code></td><td class="n">14</td></tr>
+          <tr><td>Through Bore Bearing, Long</td><td><code>REV-41-1329</code></td><td class="n">16</td></tr>
+          <tr><td>5mm × 400mm Hex Shaft (cut, see below) + 90mm shafts</td><td><code>REV-41-1362/1348</code></td><td class="n">3 + 2</td></tr>
+          <tr><td>15mm Extrusion 420mm (cut)</td><td><code>REV-41-1432</code></td><td class="n">9</td></tr>
+          <tr><td>Shaft Collars</td><td><code>REV-41-1327</code></td><td class="n">~20</td></tr>
+          <tr><td>90mm Grip Wheel (flywheel)</td><td><code>REV-41-1267</code></td><td class="n">2</td></tr>
+          <tr><td>30mm Round Belt Pulley (cord spools) + UHMWPE cord</td><td><code>REV-41-1344/1162</code></td><td class="n">2</td></tr>
+          <tr><td>UltraPlanetary Flat Mounting Bracket</td><td><code>REV-41-1624</code></td><td class="n">2</td></tr>
+        </tbody>
+      </table>
+    </details>
+
+    <details>
+      <summary>Cut list</summary>
+      <table>
+        <thead><tr><th>Piece</th><th>From</th><th class="n">Length</th></tr></thead>
+        <tbody>
+          <tr><td>Shaft F (flywheel)</td><td>400mm hex</td><td class="n">190 mm</td></tr>
+          <tr><td>Shaft CS2 (strong output)</td><td>400mm hex</td><td class="n">170 mm</td></tr>
+          <tr><td>Shaft CF (fast output)</td><td>400mm hex</td><td class="n">160 mm</td></tr>
+          <tr><td>Shaft I (input, slider) and CS</td><td>400mm hex</td><td class="n">148 mm × 2</td></tr>
+          <tr><td>Wall bars (top, bottom, 2 rows) × 2 walls</td><td>420mm extrusion</td><td class="n">185 mm × 8</td></tr>
+          <tr><td>Wall uprights (+2 motor uprights on the front)</td><td>420mm extrusion</td><td class="n">150 mm × 6</td></tr>
+          <tr><td>Spacers between walls</td><td>420mm extrusion</td><td class="n">108 mm × 4</td></tr>
+          <tr><td>Carriage tie bar</td><td>420mm extrusion offcut</td><td class="n">40 mm × 1</td></tr>
+          <tr><td>Servo link (2 layers, M3 holes 34 mm apart)</td><td>1mm polycarbonate</td><td class="n">12 × 50 mm</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:8px">Also file a small chamfer on the tooth ends of the 72T slider (both faces) and on the entry face of the 30T and two 125T gears it slides into. That lets the slider drop into mesh.</p>
+    </details>
+
+    <section class="controls">
+      <h2>View</h2>
+      <div class="row"><label for="speed">Animation speed</label><input type="range" id="speed" min="0.2" max="3" step="0.1" value="1.2"></div>
+      <div class="row"><label class="check"><input type="checkbox" id="showFrame" checked> Frame</label><label class="check"><input type="checkbox" id="showLabels" checked> Labels</label></div>
+    </section>
+
+    <p class="note">Only <b>one gear moves</b> to shift: the 72T slider on the input shaft. It can only mesh one output at a time, so two outputs can never engage together. Shifts run <b>stop motors, slide, spin up</b>. Uses 2 of the kit's 6 HD Hex motors. Layout model in millimetres, not a CAD file.</p>
+  </aside>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+const stageEl = document.getElementById('stage'), labelsEl = document.getElementById('labels');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- layout in millimetres. X across, Y up, Z from the front wall's inner face toward the back ----------
+const MOD = 0.75;                                  // REV plastic gears: module 0.75, 15 mm wide
+const cd = (a, b) => MOD * (a + b) / 2;
+const P = { I: { x: 0, y: 0 } };
+P.F = { x: -cd(72, 30), y: 0 };
+P.CF = { x: cd(72, 125), y: 0 };
+P.CS = { x: Math.sqrt(cd(72, 125) ** 2 - 60 ** 2), y: -60 };
+P.CS2 = { x: P.CS.x + cd(45, 125), y: -60 };
+P.M1 = { x: 0, y: cd(45, 45) }; P.M2 = { x: 0, y: -cd(45, 45) };
+const LANE = { 0: 10, F: 37, N: 54, CF: 71, CS: 88 };   // gear lane centres (Z)
+const WALL = { front: [-15, 0], back: [108, 123] };
+const FW = 15;                                       // gear face width
+
+// ---------- renderer ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+stageEl.prepend(renderer.domElement);
+const labelRenderer = new CSS2DRenderer({ element: labelsEl });
+const scene = new THREE.Scene();
+const root = new THREE.Group(); root.scale.setScalar(1 / 25.4); root.position.set(-1.2, 0.3, -2.2); scene.add(root);
+const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 200);
+const HOME = { pos: new THREE.Vector3(7.5, 5.5, 10.5), target: new THREE.Vector3(0, -0.4, 0) };
+camera.position.copy(HOME.pos);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.copy(HOME.target); controls.enableDamping = true; controls.minDistance = 2; controls.maxDistance = 40;
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 1.6));
+const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(8, 12, 10); scene.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 0.9); rim.position.set(-10, -4, -12); scene.add(rim);
+function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+let accent = new THREE.Color('#d9480f');
+function applyTheme() { try { scene.background = new THREE.Color(cssVar('--stage') || '#e2e7ec'); accent = new THREE.Color(cssVar('--accent') || '#d9480f'); } catch (e) { /* defaults */ } recolor(); }
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+// ---------- materials ----------
+const BASE = { acetal: 0xe9e6dc, shaft: 0x9aa3ab, extr: 0x7d8790, block: 0x2d333a, motor: 0x2b3137, gearbox: 0x8b939b, sprocket: 0x30363d, chain: 0x5c636b, wheel: 0x3b4046, servo: 0x1f2328, poly: 0xcfe3f3, rope: 0xc9a86a, mark: 0xd9480f };
+const parts = {};
+function mat(kind, extra = {}) { const m = new THREE.MeshStandardMaterial({ color: BASE[kind], metalness: kind === 'acetal' || kind === 'wheel' || kind === 'rope' ? 0.05 : 0.55, roughness: kind === 'acetal' ? 0.55 : 0.4, ...extra }); m.userData.kind = kind; return m; }
+function reg(k, mesh) { (parts[k] ||= []).push(mesh); return mesh; }
+const hot = new Set();
+function recolor() {
+  for (const [k, list] of Object.entries(parts)) for (const m of list) {
+    const kind = m.material.userData.kind;
+    if (hot.has(k)) { m.material.color.copy(accent); m.material.emissive.copy(accent).multiplyScalar(0.15); }
+    else { m.material.color.setHex(BASE[kind]); m.material.emissive.setHex(0x000000); }
+  }
+}
+
+// ---------- builders ----------
+function teeth(N, rootR, tipR) {
+  const pts = [], p = (2 * Math.PI) / N;
+  for (let i = 0; i < N; i++) { const c = i * p; for (const [R, a] of [[rootR, c - 0.5 * p], [rootR, c - 0.27 * p], [tipR, c - 0.11 * p], [tipR, c + 0.11 * p], [rootR, c + 0.27 * p]]) pts.push(new THREE.Vector2(R * Math.cos(a), R * Math.sin(a))); }
+  return pts;
+}
+function hexPath(af = 5.2) { const r = af / Math.sqrt(3); const h = new THREE.Path(); for (let k = 0; k < 6; k++) { const a = (k / 6) * Math.PI * 2; if (k === 0) h.moveTo(r * Math.cos(a), r * Math.sin(a)); else h.lineTo(r * Math.cos(a), r * Math.sin(a)); } h.closePath(); return h; }
+function circ(r, cx = 0, cy = 0) { const h = new THREE.Path(); h.absarc(cx, cy, r, 0, Math.PI * 2, true); return h; }
+function extrude(shape, depth, z0) { const g = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 12 }); g.translate(0, 0, z0); return g; }
+function gear(k, N, pos, z, kind = 'acetal') {
+  const r = MOD * N / 2;
+  const s = new THREE.Shape(teeth(N, r - 1.25 * MOD, r + MOD)); s.holes.push(hexPath());
+  if (N >= 45) for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2; s.holes.push(circ(r * 0.17, r * 0.55 * Math.cos(a), r * 0.55 * Math.sin(a))); }
+  const g = new THREE.Group(); g.add(reg(k, new THREE.Mesh(extrude(s, FW, -FW / 2), mat(kind))));
+  g.position.set(pos.x, pos.y, z); root.add(g); return g;
+}
+function sprocket(k, N, pos, z) {                    // #25 chain: pitch 6.35 mm
+  const r = 6.35 / (2 * Math.sin(Math.PI / N));
+  const s = new THREE.Shape(teeth(N, r - 2.2, r + 1.6)); s.holes.push(hexPath());
+  const g = new THREE.Group(); g.add(reg(k, new THREE.Mesh(extrude(s, 3, -1.5), mat('sprocket'))));
+  g.position.set(pos.x, pos.y, z); root.add(g); return { g, r };
+}
+function cyl(r, len, kind, k) { const g = new THREE.CylinderGeometry(r, r, len, 40); g.rotateX(Math.PI / 2); const m = new THREE.Mesh(g, mat(kind)); if (k) reg(k, m); return m; }
+function shaft(k, pos, z0, z1) {
+  const s = new THREE.Shape(); const r = 5 / Math.sqrt(3);
+  for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2; if (i === 0) s.moveTo(r * Math.cos(a), r * Math.sin(a)); else s.lineTo(r * Math.cos(a), r * Math.sin(a)); }
+  const g = new THREE.Group(); g.add(reg(k, new THREE.Mesh(extrude(s, z1 - z0, z0), mat('shaft'))));
+  g.position.set(pos.x, pos.y, 0); root.add(g); return g;
+}
+function collar(pos, z) { const m = cyl(5, 4, 'block'); m.position.set(pos.x, pos.y, z); root.add(m); }
+const frame = new THREE.Group(); root.add(frame);
+function bar(x0, y0, z0, x1, y1, z1) {            // 15 mm extrusion with slot grooves
+  const g = new THREE.Group();
+  const b = new THREE.Mesh(new THREE.BoxGeometry(Math.abs(x1 - x0) || 15, Math.abs(y1 - y0) || 15, Math.abs(z1 - z0) || 15), mat('extr'));
+  g.add(b); g.position.set((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2); frame.add(g); return g;
+}
+function pillow(pos, z0, below) {                  // bearing pillow block sitting on the row bar under the shaft
+  const m = new THREE.Mesh(new THREE.BoxGeometry(22, below + 8, 15), mat('block'));
+  m.position.set(pos.x, pos.y - (below + 8) / 2 + 8, z0 + 7.5); frame.add(m);
+  const bearing = cyl(5, 15.5, 'shaft'); bearing.position.set(pos.x, pos.y, z0 + 7.5); frame.add(bearing);
+}
+function label(text, x, y, z) { const el = document.createElement('div'); el.className = 'tag'; el.textContent = text; const o = new CSS2DObject(el); o.position.set(x, y, z); root.add(o); return o; }
+
+// ---------- frame: two walls of 15 mm extrusion, pillow blocks set at the gear centre distances ----------
+const X0 = -67.5, X1 = 132.5, Y0 = -97.5, Y1 = 67.5;
+for (const [z0, z1] of [WALL.front, WALL.back]) {
+  bar(X0, Y1 - 7.5, z0, X1, Y1 + 7.5, z1);  bar(X0, Y0 - 7.5, z0, X1, Y0 + 7.5, z1);   // top, bottom
+  bar(X0, -22.5, z0, X1, -7.5, z1);           bar(X0, -82.5, z0, X1, -67.5, z1);       // row bars under the two shaft rows
+  bar(X0 - 15, Y0 - 7.5, z0, X0, Y1 + 7.5, z1); bar(X1, Y0 - 7.5, z0, X1 + 15, Y1 + 7.5, z1); // uprights
+  for (const k of ['I', 'F', 'CF']) pillow(P[k], z0, 0);
+  for (const k of ['CS', 'CS2']) pillow(P[k], z0, 0);
+}
+for (const x of [-37, 37]) bar(x - 7.5, Y0 - 7.5, WALL.front[0], x + 7.5, Y1 + 7.5, WALL.front[1]);  // motor uprights (front)
+for (const [x, y] of [[X0 - 7.5, Y1], [X1 + 7.5, Y1], [X0 - 7.5, Y0], [X1 + 7.5, Y0]]) bar(x - 7.5, y - 7.5, 0, x + 7.5, y + 7.5, 108);  // spacers
+
+// ---------- motors (HD Hex + UltraPlanetary 4:1) on the front wall ----------
+const motorGears = {};
+for (const k of ['M1', 'M2']) {
+  const gb = new THREE.Mesh(new THREE.BoxGeometry(36, 36, 44), mat('gearbox')); gb.position.set(P[k].x, P[k].y, -15 - 3 - 22); root.add(gb);
+  const mot = cyl(18, 52, 'motor'); mot.position.set(P[k].x, P[k].y, -15 - 3 - 44 - 26); root.add(mot);
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(90, 40, 3), mat('extr')); plate.position.set(P[k].x, P[k].y, -16.5); root.add(plate);
+  shaft('in', P[k], -18, 20);
+  motorGears[k] = gear('in', 45, P[k], LANE[0]);
+}
+// ---------- input shaft I: fixed 45T + the sliding 72T on a carriage ----------
+shaft('in', P.I, -20, 128);
+const g45I = gear('in', 45, P.I, LANE[0]);
+collar(P.I, LANE[0] - 9.5); collar(P.I, LANE[0] + 9.5);
+const slider = new THREE.Group(); root.add(slider);
+const sliderGear = gear('in', 72, { x: 0, y: 0 }, 0); root.remove(sliderGear); slider.add(sliderGear);
+const carriage = new THREE.Group(); slider.add(carriage);
+for (const s of [-1, 1]) {
+  const br = new THREE.Mesh(new THREE.BoxGeometry(30, 46, 4), mat('block')); br.position.set(0, 8, s * 12); carriage.add(br);
+  const bb = cyl(5.5, 6, 'shaft'); bb.position.set(0, 0, s * 12); carriage.add(bb);
+}
+const tie = new THREE.Mesh(new THREE.BoxGeometry(15, 15, 30), mat('extr')); tie.position.set(0, 31, 0); carriage.add(tie);
+const pinTop = new THREE.Mesh(new THREE.BoxGeometry(6, 10, 6), mat('poly')); pinTop.position.set(0, 42, 0); carriage.add(pinTop);
+slider.position.set(P.I.x, P.I.y, LANE.F);
+
+// ---------- outputs ----------
+// flywheel: F shaft with 30T in the flywheel lane, two 90 mm grip wheels behind the back wall
+shaft('F', P.F, -20, 170);
+const g30F = gear('F', 30, P.F, LANE.F);
+const flywheel = new THREE.Group();
+for (const z of [138, 158]) { const w = reg('F', cyl(45, 18, 'wheel')); w.position.z = z; flywheel.add(w); }
+const fwMark = new THREE.Mesh(new THREE.BoxGeometry(8, 4, 40), mat('mark')); fwMark.position.set(0, 44, 148); flywheel.add(fwMark);
+flywheel.position.set(P.F.x, P.F.y, 0); root.add(flywheel);
+// climb fast: CF shaft, 125T in its lane, 15T sprocket out the back, chain to 54T + spool
+shaft('CF', P.CF, -20, 140);
+const g125CF = gear('CF', 125, P.CF, LANE.CF);
+const sCF = sprocket('CF', 15, P.CF, 131);
+// climb strong: CS shaft (125T + 45T), CS2 shaft (125T), 15T sprocket out the back
+shaft('CS', P.CS, -20, 128);
+const g125CS = gear('CS', 125, P.CS, LANE.CS);
+const g45CS = gear('CS', 45, P.CS, LANE.N);
+shaft('CS2', P.CS2, -20, 150);
+const g125CS2 = gear('CS2', 125, P.CS2, LANE.N);
+const sCS2 = sprocket('CS2', 15, P.CS2, 143);
+// spool shafts below the gearbox (on the robot), driven by chain 15T -> 54T
+const spools = {};
+function chainOut(k, from, z, small) {
+  const to = { x: from.x, y: from.y - 120 };
+  const big = sprocket(k + 'spool', 54, to, z);
+  shaft(k + 'spool', to, z - 10, z + 40);
+  const sp = new THREE.Group(); const hub = reg(k + 'spool', cyl(12.5, 20, 'acetal')); sp.add(hub);
+  const mk = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 21), mat('mark')); mk.position.set(0, 12.5, 0); sp.add(mk);
+  sp.position.set(to.x, to.y, z + 18); root.add(sp);
+  const rope = cyl(0.8, 140, 'rope'); rope.rotation.x = Math.PI / 2; rope.position.set(to.x + 12.5, to.y + 70, z + 18); root.add(rope);
+  const rs = small.r, rb = big.r;
+  const chainMat = mat('chain');
+  for (const s of [-1, 1]) {
+    const a0 = new THREE.Vector3(from.x + s * rs, from.y, z), a1 = new THREE.Vector3(to.x + s * rb, to.y, z);
+    const len = a0.distanceTo(a1); const seg = new THREE.Mesh(new THREE.BoxGeometry(2.5, len, 3.5), chainMat);
+    seg.position.copy(a0).add(a1).multiplyScalar(0.5); seg.rotation.z = Math.atan2(-(a1.x - a0.x), a1.y - a0.y); root.add(seg);
+  }
+  spools[k] = { big: big.g, spool: sp };
+}
+chainOut('CF', P.CF, 131, sCF);
+chainOut('CS2', P.CS2, 143, sCS2);
+
+// ---------- Smart Robot Servo on the top bar, horn + polycarbonate link to the carriage ----------
+const SERVO = { x: -4, y: 97, z: 62, R: 34 };
+bar(-27.5, 75, 0, -12.5, 90, 108);                                     // servo mounting bar between the walls
+const servoBody = new THREE.Mesh(new THREE.BoxGeometry(20, 37, 41), mat('servo')); servoBody.position.set(SERVO.x - 12, 90 + 18.5, SERVO.z); root.add(servoBody);
+const horn = new THREE.Group(); const hornArm = new THREE.Mesh(new THREE.BoxGeometry(3, SERVO.R + 6, 6), mat('shaft')); hornArm.position.set(0, -SERVO.R / 2, 0); horn.add(hornArm);
+horn.position.set(SERVO.x, SERVO.y, SERVO.z); root.add(horn);
+const link = new THREE.Mesh(new THREE.BoxGeometry(6, 1, 2), mat('poly', { transparent: true, opacity: 0.85 })); root.add(link);
+const _up = new THREE.Vector3(0, 1, 0);
+
+const tags = {
+  slider: label('Sliding 72T (the shifter)', 0, 52, 40),
+  servo: label('Smart Robot Servo', 0, 120, SERVO.z),
+  motors: label('2 × HD Hex + UltraPlanetary 4:1', 0, 62, -60),
+  F: label('Flywheel · 2 × 90 mm grip wheel', P.F.x, 58, 148),
+  CF: label('Climb fast · chain 15T→54T', P.CF.x + 20, -150, 131),
+  CS: label('Climb strong · 45T→125T + chain', P.CS2.x + 15, -200, 143),
+  frame: label('Pillow blocks on 15 mm extrusion', X1 + 10, -15, 123),
+};
+
+// ---------- simulation ----------
+const ORDER = ['F', 'N', 'CF', 'CS'];
+function meshAngle(a1, n1, n2, c1, c2) { const th = Math.atan2(c2.y - c1.y, c2.x - c1.x), k = n1 / n2; return -k * a1 + th + Math.PI + k * th - Math.PI / n2; }
+const st = { mode: 'F', target: 'F', phase: 'run', t: 0, ramp: 1, paused: false, z: LANE.F, z0: LANE.F, z1: LANE.F,
+  thI: 0, frozen: { F: 0, CF: 0, CS: 0 } };
+const DUR = reduceMotion ? { down: 0.01, perLane: 0.01, up: 0.01 } : { down: 0.35, perLane: 0.35, up: 0.5 };
+const HOT = { base: ['in'], F: ['F'], N: [], CF: ['CF', 'CFspool'], CS: ['CS', 'CS2', 'CS2spool'] };
+function setHot() { hot.clear(); for (const k of [...HOT.base, ...HOT[st.mode]]) hot.add(k); recolor();
+  tags.F.element.classList.toggle('hot', st.mode === 'F'); tags.CF.element.classList.toggle('hot', st.mode === 'CF'); tags.CS.element.classList.toggle('hot', st.mode === 'CS'); }
+const ease = t => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+function setTarget(m) {
+  if (m === st.target) return; st.target = m;
+  document.querySelectorAll('.mode').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
+  if (st.phase === 'run' || st.phase === 'up') { st.phase = 'down'; st.t = 0; st.rampStart = st.ramp; }
+  updatePanel();
+}
+function step(dt) {
+  if (st.phase === 'down') { st.t += dt; st.ramp = (st.rampStart ?? 1) * Math.max(0, 1 - st.t / DUR.down);
+    if (st.t >= DUR.down) { st.phase = 'slide'; st.t = 0; st.ramp = 0; st.moveTarget = st.target; st.z0 = st.z; st.z1 = LANE[st.target];
+      st.slideDur = Math.max(0.25, DUR.perLane * Math.abs(ORDER.indexOf(st.target) - ORDER.indexOf(st.mode))); st.mode = 'N'; setHot(); } }
+  else if (st.phase === 'slide') { st.t += dt; const e = ease(Math.min(1, st.t / st.slideDur)); st.z = st.z0 + (st.z1 - st.z0) * e;
+    if (st.t >= st.slideDur) { st.mode = st.moveTarget; setHot(); updatePanel();
+      if (st.mode !== st.target) { st.phase = 'down'; st.t = 0; st.rampStart = 0; } else { st.phase = 'up'; st.t = 0; } } }
+  else if (st.phase === 'up') { st.t += dt; st.ramp = Math.min(1, st.t / DUR.up); if (st.t >= DUR.up) { st.phase = 'run'; st.ramp = 1; }
+    if (st.target !== st.mode) { st.phase = 'down'; st.t = 0; st.rampStart = st.ramp; } }
+  const speed = Number(document.getElementById('speed').value) || 1;
+  const wI = st.paused ? 0 : -speed * Math.PI * 2 * st.ramp / 3.61 * 3;   // slowed for viewing
+  st.thI += wI * dt;
+  const mA = meshAngle(st.thI, 45, 45, P.I, P.M1), mB = meshAngle(st.thI, 45, 45, P.I, P.M2);
+  motorGears.M1.rotation.z = mA; motorGears.M2.rotation.z = mB; g45I.rotation.z = st.thI;
+  slider.position.z = st.z; sliderGear.rotation.z = st.thI;
+  // outputs: driven while the slider sits in their lane, otherwise they stop where they are
+  const drive = { F: meshAngle(st.thI, 72, 30, P.I, P.F), CF: meshAngle(st.thI, 72, 125, P.I, P.CF), CS: meshAngle(st.thI, 72, 125, P.I, P.CS) };
+  for (const k of ['F', 'CF', 'CS']) if (st.mode === k && st.phase !== 'slide') st.frozen[k] = drive[k];
+  g30F.rotation.z = st.frozen.F; flywheel.rotation.z = st.frozen.F;
+  g125CF.rotation.z = st.frozen.CF; sCF.g.rotation.z = st.frozen.CF; spools.CF.big.rotation.z = spools.CF.spool.rotation.z = st.frozen.CF * 15 / 54;
+  g125CS.rotation.z = g45CS.rotation.z = st.frozen.CS;
+  const cs2 = meshAngle(st.frozen.CS, 45, 125, P.CS, P.CS2);
+  g125CS2.rotation.z = cs2; sCS2.g.rotation.z = cs2; spools.CS2.big.rotation.z = spools.CS2.spool.rotation.z = cs2 * 15 / 54;
+  // servo horn follows the slider; a short polycarbonate link drops to the carriage
+  const psi = Math.asin(Math.max(-0.95, Math.min(0.95, (st.z - SERVO.z) / SERVO.R)));
+  horn.rotation.x = -psi;
+  const tipW = new THREE.Vector3(SERVO.x, SERVO.y - SERVO.R * Math.cos(psi), SERVO.z + SERVO.R * Math.sin(psi));
+  const pin = new THREE.Vector3(0, 47, st.z), dv = pin.clone().sub(tipW);
+  link.position.copy(tipW).add(pin).multiplyScalar(0.5); link.scale.set(1, Math.max(0.5, dv.length()), 1);
+  link.quaternion.setFromUnitVectors(_up, dv.normalize());
+  updateLanes();
+}
+
+// ---------- panel ----------
+const DATA = {
+  F: { ratio: '1.51 : 1', rpm: '3,979 RPM', tq: '0.27 Nm', xl: 'Surface, 90 mm wheel', x: '18.8 m/s', path: ['2 HD Hex', '4:1 cartridges', '45T', 'Shaft I', 'Slider 72T', '30T', 'Flywheel'] },
+  N: { ratio: '—', rpm: '0 RPM', tq: '0 Nm', xl: 'Output', x: 'None', path: [] },
+  CF: { ratio: '22.6 : 1', rpm: '265 RPM', tq: '3.9 Nm', xl: 'Pull at half stall, 25 mm spool', x: '16 kgf', path: ['2 HD Hex', '4:1 cartridges', 'Shaft I', 'Slider 72T', '125T', 'Chain 15T→54T', 'Spool'] },
+  CS: { ratio: '62.8 : 1', rpm: '96 RPM', tq: '10.2 Nm', xl: 'Pull at half stall, 25 mm spool', x: '41 kgf', path: ['2 HD Hex', '4:1 cartridges', 'Shaft I', 'Slider 72T', '125T', '45T→125T', 'Chain 15T→54T', 'Spool'] },
+};
+const laneCells = [...document.querySelectorAll('#lanes i')];
+let lastLane = -1;
+function updateLanes() {
+  const zs = ORDER.map(k => LANE[k]); let best = 0; zs.forEach((z, i) => { if (Math.abs(z - st.z) < Math.abs(zs[best] - st.z)) best = i; });
+  if (best !== lastLane) { lastLane = best; laneCells.forEach((c, i) => c.classList.toggle('on', i === best)); }
+  const tx = document.getElementById('statusText'), stEl = document.getElementById('status');
+  const names = { F: 'Flywheel', N: 'Neutral', CF: 'Climb fast', CS: 'Climb strong' };
+  const text = st.phase === 'down' ? 'Stopping motors' : st.phase === 'slide' ? 'Sliding the 72T gear' : st.phase === 'up' ? 'Spinning up' : `Meshed · ${names[st.mode]}`;
+  if (tx.textContent !== text) tx.textContent = text; stEl.classList.toggle('busy', st.phase !== 'run');
+}
+function updatePanel() {
+  const d = DATA[st.target];
+  document.getElementById('rRatio').textContent = d.ratio; document.getElementById('rRpm').textContent = d.rpm; document.getElementById('rTq').textContent = d.tq;
+  document.getElementById('rXL').textContent = d.xl; document.getElementById('rX').textContent = d.x;
+  const p = document.getElementById('path'); p.textContent = '';
+  if (!d.path.length) { const s = document.createElement('span'); s.className = 'none'; s.textContent = 'The slider sits in an empty lane: the input turns, every output stays still.'; p.append(s); }
+  else d.path.forEach((n, i) => { if (i) { const a = document.createElement('span'); a.className = 'a'; a.textContent = '→'; p.append(a); } const c = document.createElement('span'); c.className = 'p'; c.textContent = n; p.append(c); });
+}
+document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => setTarget(b.dataset.mode)));
+document.getElementById('showFrame').addEventListener('change', e => { frame.visible = e.target.checked; });
+document.getElementById('showLabels').addEventListener('change', e => { labelsEl.hidden = !e.target.checked; });
+document.getElementById('pause').addEventListener('click', e => { st.paused = !st.paused; e.currentTarget.textContent = st.paused ? 'Play' : 'Pause'; });
+document.getElementById('resetView').addEventListener('click', () => { camera.position.copy(HOME.pos); controls.target.copy(HOME.target); controls.update(); });
+document.getElementById('viewFront').addEventListener('click', () => { camera.position.set(0, 0, -14); controls.target.set(0, -0.4, 0); controls.update(); });
+document.getElementById('viewSide').addEventListener('click', () => { camera.position.set(14, 0, 0.01); controls.target.set(0, -0.4, 0); controls.update(); });
+
+function resize() { const w = stageEl.clientWidth, h = stageEl.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); labelRenderer.setSize(w, h); camera.aspect = w / h; camera.fov = w < 520 ? 48 : 34; camera.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(stageEl);
+resize(); applyTheme(); setHot(); updatePanel();
+document.getElementById('loading').hidden = true;
+const clock = new THREE.Clock();
+(function frameLoop() { const dt = Math.min(clock.getDelta(), 0.05); step(dt); controls.update(); renderer.render(scene, camera); labelRenderer.render(scene, camera); requestAnimationFrame(frameLoop); })();
+</script>

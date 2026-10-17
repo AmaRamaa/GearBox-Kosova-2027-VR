@@ -18,6 +18,7 @@ These are layout models for checking spacing, ratios and power flow. They are no
 | [B](version-b-inline-4/) | 9 shafts in one line, flat | 4 NEO Vortex in a row | Flywheel, climber fast, climber strong | 3 dog collars, pneumatic |
 | [C](version-c-inline-4-improved/) | Same as B, refined | 4 NEO Vortex in a row | Flywheel, climber fast, climber strong | 1 servo + selector bar |
 | [D](version-d-hyperdrive/) | C plus a camshaft on top, planetary, cycloid, differential | 4 NEO Vortex in a row | Flywheel (2 speeds), 2 climb hooks, haul, boost, park | Servo camshaft, 7 positions, synchronizers |
+| [E](version-e-fgc/) | **FGC kit only**: pillow blocks on 15 mm extrusion | 2 HD Hex + UltraPlanetary 4:1 | Flywheel, climb fast, climb strong | 1 Smart Robot Servo + sliding 72T gear |
 
 ## Ratios (NEO Vortex, 6,784 RPM free)
 
@@ -90,6 +91,25 @@ Everything from C, plus every mechanism we could justify, and some we couldn't.
 - The camshaft sits above the plates, so D is about 0.7 in taller than C.
 
 Honest note: this is a showcase of mechanisms, not a recommendation. Each feature adds weight, parts and failure points; version C is the one to build for a season.
+
+## Version E: FIRST Global (FGC) kit build
+
+Version E is the one to build for FGC. It uses only parts from the FIRST Global REV DUO kit, plus parts you cut from kit stock. No custom dog gears, no pneumatics, no belts, no machined plates.
+
+- **Motors:** 2 HD Hex motors, each with an UltraPlanetary 4:1 cartridge, meshing one input shaft through 45T gears.
+- **Shifter:** a single 72T plastic gear slides along the 5 mm hex input shaft between four lanes: Flywheel, Neutral, Climb fast, Climb strong. It is carried by two 15mm Plastic Motion Brackets with through-bore bearings and pushed by one Smart Robot Servo through a short polycarbonate link. One gear can only mesh one partner, so two outputs can never engage together.
+- **Frame:** two walls of 15 mm extrusion. Bearing pillow blocks slide along the row bars, so every shaft sits at the exact gear centre distance (REV plastic gears are module 0.75: centre distance = 0.375 mm × total teeth).
+- **Shifting:** stop the motors, slide the gear, spin up. File a small chamfer on the slider's teeth and on the entry face of the gears it slides into.
+
+| Output | Gears | Ratio | Free speed | Stall torque (2 motors) |
+| --- | --- | --- | --- | --- |
+| Flywheel | 72T → 30T, 2 × 90 mm grip wheels | 1.51:1 | 3,979 RPM (18.8 m/s) | 0.27 Nm |
+| Climb fast | 72T → 125T, chain 15T → 54T | 22.6:1 | 265 RPM | 3.9 Nm (≈16 kgf at half stall, 25 mm spool) |
+| Climb strong | 72T → 125T, 45T → 125T, chain 15T → 54T | 62.8:1 | 96 RPM | 10.2 Nm (≈41 kgf at half stall) |
+
+Shaft positions (mm, input shaft at 0,0): F (−38.25, 0), CF (73.88, 0), CS (43.10, −60), CS2 (106.85, −60), motors (0, ±33.75). Lanes along the shafts (mm from the front wall): motor gears 10, Flywheel 37, Neutral 54, Climb fast 71, Climb strong 88. The parts list and cut list are in the 3D page's panel.
+
+Based on the 2024 FIRST Global kit list ([REV BOM](https://revrobotics.com/content/docs/REV-45-1188_FIRST_Global_Kit_2024-Visual_BOM.pdf)); check your 2027 kit and the game manual's motor and modification rules before building.
 
 ## Parts
 
