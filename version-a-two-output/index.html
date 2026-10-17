@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>4-Mode Gearbox 3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one-screen workbench. 3D stage fills the left, a spec panel on the right; stacks on phones. */
+:root {
+  --bg: #eef1f4;
+  --panel: #ffffff;
+  --stage: #e2e7ec;
+  --ink: #15202a;
+  --muted: #5b6976;
+  --line: #ccd4dc;
+  --accent: #d9480f;
+  --accent-soft: #fbe4d7;
+  --steel: #3e464d;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Barlow", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f151b; --panel: #151d25; --stage: #10181f; --ink: #e5ecf2; --muted: #93a1ae;
+    --line: #2a3541; --accent: #ff7a3d; --accent-soft: #3a2217; --steel: #8b959e; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f151b; --panel: #151d25; --stage: #10181f; --ink: #e5ecf2; --muted: #93a1ae;
+  --line: #2a3541; --accent: #ff7a3d; --accent-soft: #3a2217; --steel: #8b959e; color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45;
+}
+.app {
+  height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px;
+  padding-block: 16px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  box-sizing: border-box;
+}
+.stage {
+  position: relative; min-width: 0; min-height: 0; border-radius: 10px; overflow: hidden;
+  background: var(--stage); border: 1px solid var(--line);
+}
+.stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.labels { position: absolute; inset: 0; pointer-events: none; }
+.tag {
+  font-family: var(--font-data); font-size: 11px; color: var(--ink); background: var(--panel);
+  border: 1px solid var(--line); padding: 2px 6px; border-radius: 4px; white-space: nowrap;
+}
+.tag.hot { border-color: var(--accent); color: var(--accent); }
+.legend {
+  position: absolute; left: 12px; bottom: 12px; display: flex; flex-wrap: wrap; gap: 6px 14px;
+  font-size: 12px; color: var(--muted); background: var(--panel); border: 1px solid var(--line);
+  border-radius: 6px; padding: 6px 10px;
+}
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.sw.hot { background: var(--accent); }
+.sw.idle { background: var(--steel); }
+.stage-tools { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; }
+.panel {
+  min-width: 0; overflow-y: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  padding: 18px; display: flex; flex-direction: column; gap: 18px; box-sizing: border-box;
+}
+.eyebrow { font-family: var(--font-data); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.05; margin: 4px 0 0; text-wrap: balance; letter-spacing: .01em; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mode {
+  text-align: left; font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--line);
+  border-radius: 8px; padding: 9px 10px; cursor: pointer; display: flex; flex-direction: column; gap: 2px;
+}
+.mode b { font-family: var(--font-display); font-size: 18px; font-weight: 600; letter-spacing: .02em; }
+.mode small { color: var(--muted); font-size: 12.5px; }
+.mode[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.mode[aria-pressed="true"] b { color: var(--accent); }
+.mode:hover { border-color: var(--muted); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.status.busy .dot { animation: blink .6s infinite alternate; }
+@keyframes blink { from { opacity: 1 } to { opacity: .25 } }
+.readout { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.cell { background: var(--panel); padding: 9px 10px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cell span { font-size: 12px; color: var(--muted); }
+.cell strong { font-family: var(--font-data); font-weight: 600; font-size: 16px; font-variant-numeric: tabular-nums; }
+.path { display: flex; flex-wrap: wrap; gap: 4px 2px; align-items: center; font-family: var(--font-data); font-size: 12px; }
+.path .chip { border: 1px solid var(--accent); color: var(--accent); border-radius: 4px; padding: 1px 6px; }
+.path .arrow { color: var(--muted); padding: 0 2px; }
+.path .none { color: var(--muted); }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; color: var(--ink); background: transparent; border: 0; padding: 5px 12px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+.tool {
+  font: inherit; font-size: 12.5px; color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+  border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.tool:hover { border-color: var(--muted); }
+label.check { display: inline-flex; gap: 6px; align-items: center; font-size: 13.5px; cursor: pointer; }
+input[type="range"] { width: 150px; accent-color: var(--accent); }
+.controls { display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; }
+.note { font-size: 12.5px; color: var(--muted); margin: 0; }
+.note b { color: var(--ink); font-weight: 600; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 13px; }
+@media (max-width: 860px) {
+  html, body { height: auto; }
+  .app { height: auto; grid-template-columns: minmax(0, 1fr); }
+  .stage { height: min(64vh, 520px); }
+  .panel { overflow: visible; }
+}
+@media (prefers-reduced-motion: reduce) { .status.busy .dot { animation: none; } }
+</style>
+
+<div class="app">
+  <div class="stage" id="stage">
+    <div class="loading" id="loading">Loading 3D model…</div>
+    <div class="labels" id="labels"></div>
+    <div class="stage-tools">
+      <button class="tool" id="pause" type="button">Pause</button>
+      <button class="tool" id="resetView" type="button">Reset view</button>
+    </div>
+    <div class="legend">
+      <span><i class="sw hot"></i>Driven by the motors</span>
+      <span><i class="sw idle"></i>Idle</span>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <div>
+      <div class="eyebrow">REV ION · 20DP · concept model</div>
+      <h1>4-Mode Shifting Gearbox</h1>
+    </div>
+
+    <section>
+      <h2>Selector position</h2>
+      <div class="modes" role="group" aria-label="Selector position">
+        <button class="mode" type="button" id="mode1" data-mode="1" aria-pressed="true"><b>Gear 1</b><small>Flywheel · 1:1</small></button>
+        <button class="mode" type="button" id="mode2" data-mode="2" aria-pressed="false"><b>Gear 2</b><small>Climber fast · 12:1</small></button>
+        <button class="mode" type="button" id="mode3" data-mode="3" aria-pressed="false"><b>Gear 3</b><small>Climber strong · 24.8:1</small></button>
+        <button class="mode" type="button" id="mode0" data-mode="0" aria-pressed="false"><b>Neutral</b><small>Nothing driven</small></button>
+      </div>
+    </section>
+
+    <div class="status" id="status"><i class="dot"></i><span id="statusText">Engaged · Gear 1</span></div>
+
+    <section>
+      <h2>Output</h2>
+      <div class="readout">
+        <div class="cell"><span>Overall ratio</span><strong id="rRatio">1 : 1</strong></div>
+        <div class="cell"><span>Free speed</span><strong id="rRpm">6,784 RPM</strong></div>
+        <div class="cell"><span id="rTqLabel">Torque, 4 motors @ 40 A</span><strong id="rTq">2.3 Nm</strong></div>
+        <div class="cell"><span id="rExtraLabel">Wheel surface, 4 in</span><strong id="rExtra">36 m/s</strong></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Power path</h2>
+      <div class="path" id="path"></div>
+    </section>
+
+    <section class="controls">
+      <h2>View</h2>
+      <div class="row"><span>Motors</span>
+        <div class="seg" role="group" aria-label="Number of motors">
+          <button type="button" id="m2" data-motors="2" aria-pressed="false">2</button>
+          <button type="button" id="m4" data-motors="4" aria-pressed="true">4</button>
+        </div>
+      </div>
+      <div class="row"><label for="speed">Animation speed</label><input type="range" id="speed" min="0.2" max="3" step="0.1" value="1.2"></div>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="showPlates" checked> Side plates</label>
+        <label class="check"><input type="checkbox" id="showLabels" checked> Labels</label>
+      </div>
+    </section>
+
+    <p class="note">Switching gears runs the real sequence: <b>stop motors, move collar, spin up</b>. Dimensions are in inches from 20DP pitch diameters (teeth ÷ 20). This is a layout model for checking spacing and power flow, not a CAD file.</p>
+  </aside>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+const stageEl = document.getElementById('stage');
+const labelsEl = document.getElementById('labels');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- geometry constants (inches) ----------
+const P = {
+  A: { x: 0, y: 0 },
+  F: { x: -Math.SQRT2, y: Math.SQRT2 },     // 2.000 in from A (60T/20T)
+  C: { x: 0, y: -2.55 },                     // 2.550 in from A (30T/72T)
+  D: { x: 2.0, y: -2.55 },                   // 2.000 in from C (30/50 and 18/62)
+  M1: { x: 0, y: 1.4 }, M2: { x: 0, y: -1.4 }, // front motors, 1.400 in from A (14T/42T)
+  M3: { x: 1.4, y: 0 }, M4: { x: -1.4, y: 0 }, // back motors
+};
+const FACE = 0.5;
+const PLATE = { front: [-0.25, 0], back: [3.1, 3.35] };
+const Z = { in42f: 0.45, dog60: 1.05, dog30a: 2.15, in42b: 2.75, c72: 2.15, c30: 1.5, c18: 0.45, d50: 1.5, d62: 0.45, f20: 1.05 };
+const COLLAR = { A: { 0: 1.60, 1: 1.49, 2: 1.71, 3: 1.71 }, D: { 50: 1.06, 62: 0.89, n: 0.975 } };
+
+// ---------- renderer ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+stageEl.prepend(renderer.domElement);
+const labelRenderer = new CSS2DRenderer({ element: labelsEl });
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 200);
+const HOME = { pos: new THREE.Vector3(11.5, 7.5, -15), target: new THREE.Vector3(0.3, -0.6, -0.6) };
+camera.position.copy(HOME.pos);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.copy(HOME.target);
+controls.enableDamping = true;
+controls.minDistance = 4; controls.maxDistance = 45;
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 1.6));
+const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(8, 12, -10); scene.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 0.9); rim.position.set(-10, -4, 12); scene.add(rim);
+
+function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+let accentColor = new THREE.Color('#d9480f');
+function applyTheme() {
+  try {
+    scene.background = new THREE.Color(cssVar('--stage') || '#e2e7ec');
+    accentColor = new THREE.Color(cssVar('--accent') || '#d9480f');
+  } catch (e) { /* keep defaults */ }
+  recolor();
+}
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+// ---------- materials ----------
+const BASE = {
+  gear: { color: 0x3b4248, metalness: 0.7, roughness: 0.38 },
+  dog: { color: 0x4a535b, metalness: 0.7, roughness: 0.35 },
+  shaft: { color: 0x9aa3ab, metalness: 0.8, roughness: 0.3 },
+  collar: { color: 0xc4cbd1, metalness: 0.75, roughness: 0.3 },
+  motor: { color: 0x2b3137, metalness: 0.4, roughness: 0.55 },
+  ctrl: { color: 0x59646e, metalness: 0.3, roughness: 0.6 },
+  wheel: { color: 0x24292e, metalness: 0.1, roughness: 0.85 },
+  hub: { color: 0xa7b0b8, metalness: 0.7, roughness: 0.35 },
+  mark: { color: 0xf2f4f6, metalness: 0.0, roughness: 0.6 },
+  rope: { color: 0xc9a86a, metalness: 0.0, roughness: 0.9 },
+  rail: { color: 0xb3bbc2, metalness: 0.8, roughness: 0.3 },
+  pneu: { color: 0x7b8791, metalness: 0.5, roughness: 0.45 },
+};
+const parts = {}; // key -> array of meshes that recolor together
+function mat(kind) { return new THREE.MeshStandardMaterial({ ...BASE[kind] }); }
+function reg(keyName, mesh, kind) {
+  mesh.userData.kind = kind;
+  (parts[keyName] ||= []).push(mesh);
+  return mesh;
+}
+
+// ---------- builders ----------
+function gearShape(N, round) {
+  const r = N / 40, ro = r + 0.05, rr = r - 0.0625, p = (2 * Math.PI) / N;
+  const s = new THREE.Shape();
+  for (let i = 0; i < N; i++) {
+    const c = i * p;
+    const pts = [[rr, c - 0.5 * p], [rr, c - 0.27 * p], [ro, c - 0.11 * p], [ro, c + 0.11 * p], [rr, c + 0.27 * p]];
+    pts.forEach(([R, a], j) => {
+      const x = R * Math.cos(a), y = R * Math.sin(a);
+      if (i === 0 && j === 0) s.moveTo(x, y); else s.lineTo(x, y);
+    });
+  }
+  s.closePath();
+  const hole = new THREE.Path();
+  if (round) { hole.absarc(0, 0, 0.3, 0, Math.PI * 2, true); }
+  else {
+    for (let k = 0; k < 6; k++) {
+      const a = (k / 6) * Math.PI * 2, x = 0.2887 * Math.cos(a), y = 0.2887 * Math.sin(a);
+      if (k === 0) hole.moveTo(x, y); else hole.lineTo(x, y);
+    }
+    hole.closePath();
+  }
+  s.holes.push(hole);
+  // lightening holes on big gears
+  if (N >= 50) {
+    const lr = r * 0.16, lc = (r * 0.62);
+    for (let k = 0; k < 5; k++) {
+      const a = (k / 5) * Math.PI * 2, h = new THREE.Path();
+      h.absarc(lc * Math.cos(a), lc * Math.sin(a), lr, 0, Math.PI * 2, true); s.holes.push(h);
+    }
+  }
+  return s;
+}
+function makeGear(keyName, N, pos, z, opts = {}) {
+  const geo = new THREE.ExtrudeGeometry(gearShape(N, opts.dog), { depth: FACE, bevelEnabled: false, curveSegments: 10 });
+  geo.translate(0, 0, -FACE / 2);
+  const kind = opts.dog ? 'dog' : 'gear';
+  const g = new THREE.Group();
+  const m = reg(keyName, new THREE.Mesh(geo, mat(kind)), kind);
+  g.add(m);
+  if (opts.dog) { // dog lugs on the face toward the collar
+    const side = opts.dogSide; // +1 lugs on +z face, -1 on -z face
+    for (let k = 0; k < 4; k++) {
+      const a = (k / 4) * Math.PI * 2;
+      const lug = reg(keyName, new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.16, 0.08), mat(kind)), kind);
+      lug.position.set(0.42 * Math.cos(a), 0.42 * Math.sin(a), side * (FACE / 2 + 0.04));
+      lug.rotation.z = a;
+      g.add(lug);
+    }
+  }
+  g.position.set(pos.x, pos.y, z);
+  scene.add(g);
+  return { group: g, N, pos };
+}
+function makeShaft(keyName, pos, z0, z1) {
+  const len = z1 - z0;
+  const geo = new THREE.CylinderGeometry(0.2887, 0.2887, len, 6);
+  geo.rotateX(Math.PI / 2);
+  const m = reg(keyName, new THREE.Mesh(geo, mat('shaft')), 'shaft');
+  const g = new THREE.Group(); g.add(m);
+  g.position.set(pos.x, pos.y, (z0 + z1) / 2);
+  scene.add(g);
+  return g;
+}
+function cyl(r, len, kind, keyName) {
+  const geo = new THREE.CylinderGeometry(r, r, len, 48); geo.rotateX(Math.PI / 2);
+  const m = new THREE.Mesh(geo, mat(kind));
+  return keyName ? reg(keyName, m, kind) : m;
+}
+function makeCollar(keyName) {
+  const g = new THREE.Group();
+  g.add(cyl(0.5, 0.2, 'collar', keyName));
+  for (const side of [-1, 1]) for (let k = 0; k < 4; k++) {
+    const a = (k / 4) * Math.PI * 2 + Math.PI / 4;
+    const lug = reg(keyName, new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, 0.08), mat('collar')), 'collar');
+    lug.position.set(0.42 * Math.cos(a), 0.42 * Math.sin(a), side * 0.14);
+    lug.rotation.z = a; g.add(lug);
+  }
+  scene.add(g);
+  return g;
+}
+function makeFork(pos, angle, railR, zNow) {
+  // fork arm (moves with collar) + shift rail + pneumatic body outside the back plate
+  const g = new THREE.Group();
+  const armLen = railR - 0.45;
+  const arm = new THREE.Mesh(new THREE.BoxGeometry(armLen, 0.22, 0.07), mat('rail'));
+  arm.position.set(0.45 + armLen / 2, 0, 0);
+  g.add(arm);
+  const railLen = PLATE.back[1] + 1.2 - zNow;
+  const rail = cyl(0.09, railLen, 'rail'); rail.position.set(railR, 0, railLen / 2); g.add(rail);
+  g.rotation.z = angle;
+  g.position.set(pos.x, pos.y, zNow);
+  scene.add(g);
+  const body = cyl(0.3, 1.5, 'pneu');
+  body.position.set(pos.x + railR * Math.cos(angle), pos.y + railR * Math.sin(angle), PLATE.back[1] + 1.05);
+  scene.add(body);
+  return g;
+}
+function makeMotor(keyName, pos, front) {
+  const dir = front ? -1 : 1;
+  const plateFace = front ? PLATE.front[0] : PLATE.back[1];
+  const meshZ = front ? Z.in42f : Z.in42b;
+  const grp = new THREE.Group();
+  const body = cyl(1.18, 3.15, 'motor'); body.position.set(pos.x, pos.y, plateFace + dir * 1.575); grp.add(body);
+  const ctrl = cyl(1.18, 0.7, 'ctrl'); ctrl.position.set(pos.x, pos.y, plateFace + dir * (3.15 + 0.35)); grp.add(ctrl);
+  const stub = cyl(0.16, Math.abs(meshZ - plateFace) + 0.2, 'shaft'); stub.position.set(pos.x, pos.y, (meshZ + plateFace) / 2); grp.add(stub);
+  scene.add(grp);
+  const pin = makeGear(keyName, 14, pos, meshZ);
+  return { grp, pin };
+}
+function makePlate(z0, z1) {
+  const s = new THREE.Shape();
+  const x0 = -2.9, x1 = 4.35, y0 = -4.75, y1 = 2.95, r = 0.55;
+  s.moveTo(x0 + r, y0); s.lineTo(x1 - r, y0); s.quadraticCurveTo(x1, y0, x1, y0 + r);
+  s.lineTo(x1, y1 - r); s.quadraticCurveTo(x1, y1, x1 - r, y1); s.lineTo(x0 + r, y1);
+  s.quadraticCurveTo(x0, y1, x0, y1 - r); s.lineTo(x0, y0 + r); s.quadraticCurveTo(x0, y0, x0 + r, y0);
+  for (const k of ['A', 'F', 'C', 'D']) { const h = new THREE.Path(); h.absarc(P[k].x, P[k].y, 0.56, 0, Math.PI * 2, true); s.holes.push(h); }
+  const geo = new THREE.ExtrudeGeometry(s, { depth: z1 - z0, bevelEnabled: false, curveSegments: 16 });
+  geo.translate(0, 0, z0);
+  const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0xb9c3cc, metalness: 0.6, roughness: 0.4, transparent: true, opacity: 0.2, depthWrite: false }));
+  const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 30), new THREE.LineBasicMaterial({ color: 0x8995a0, transparent: true, opacity: 0.7 }));
+  const g = new THREE.Group(); g.add(m, edges); scene.add(g);
+  return g;
+}
+function label(text, x, y, z) {
+  const el = document.createElement('div'); el.className = 'tag'; el.textContent = text;
+  const o = new CSS2DObject(el); o.position.set(x, y, z); scene.add(o);
+  return o;
+}
+
+// ---------- build the gearbox ----------
+const plates = [makePlate(...PLATE.front), makePlate(...PLATE.back)];
+
+const shaftA = makeShaft('shaftA', P.A, -0.4, 3.55);
+const shaftF = makeShaft('shaftF', P.F, -5.9, 3.35);
+const shaftC = makeShaft('shaftC', P.C, -0.25, 3.35);
+const shaftD = makeShaft('shaftD', P.D, -2.1, 3.35);
+
+const g42f = makeGear('g42f', 42, P.A, Z.in42f);
+const g42b = makeGear('g42b', 42, P.A, Z.in42b);
+const dog60 = makeGear('dog60', 60, P.A, Z.dog60, { dog: true, dogSide: 1 });
+const dog30a = makeGear('dog30a', 30, P.A, Z.dog30a, { dog: true, dogSide: -1 });
+const g20 = makeGear('g20', 20, P.F, Z.f20);
+const g72 = makeGear('g72', 72, P.C, Z.c72);
+const c30 = makeGear('c30', 30, P.C, Z.c30);
+const c18 = makeGear('c18', 18, P.C, Z.c18);
+const dog50 = makeGear('dog50', 50, P.D, Z.d50, { dog: true, dogSide: -1 });
+const dog62 = makeGear('dog62', 62, P.D, Z.d62, { dog: true, dogSide: 1 });
+
+const collarA = makeCollar('collarA'); collarA.position.set(P.A.x, P.A.y, COLLAR.A[1]);
+const collarD = makeCollar('collarD'); collarD.position.set(P.D.x, P.D.y, COLLAR.D[50]);
+const forkA = makeFork(P.A, Math.PI / 4, 2.6, COLLAR.A[1]);
+const forkD = makeFork(P.D, 0, 1.9, COLLAR.D[50]);
+
+const motors = {
+  M1: makeMotor('pin1', P.M1, true), M2: makeMotor('pin2', P.M2, true),
+  M3: makeMotor('pin3', P.M3, false), M4: makeMotor('pin4', P.M4, false),
+};
+
+// flywheel on F, out the front
+const flywheel = new THREE.Group();
+flywheel.add(reg('flywheel', cyl(2.0, 1.25, 'wheel'), 'wheel'));
+flywheel.add(reg('flywheel', cyl(0.75, 1.35, 'hub'), 'hub'));
+const fwMark = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.12, 1.27), mat('mark')); fwMark.position.set(0, 1.95, 0); flywheel.add(fwMark);
+flywheel.position.set(P.F.x, P.F.y, -5.1); scene.add(flywheel);
+
+// climber spool + ratchet on D, out the front
+const spool = new THREE.Group();
+spool.add(reg('spool', cyl(0.625, 1.0, 'hub'), 'hub'));
+const fl1 = reg('spool', cyl(0.9, 0.08, 'hub'), 'hub'); fl1.position.z = 0.54; spool.add(fl1);
+const fl2 = reg('spool', cyl(0.9, 0.08, 'hub'), 'hub'); fl2.position.z = -0.54; spool.add(fl2);
+const spMark = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.06, 1.02), mat('mark')); spMark.position.set(0, 0.62, 0); spool.add(spMark);
+spool.position.set(P.D.x, P.D.y, -1.35); scene.add(spool);
+const rope = cyl(0.045, 3.6, 'rope'); rope.rotation.x = Math.PI / 2; rope.position.set(P.D.x + 0.63, P.D.y + 1.8, -1.35); scene.add(rope);
+
+function ratchetShape() {
+  const s = new THREE.Shape(), N = 20, ro = 0.62, rr = 0.48;
+  for (let i = 0; i < N; i++) {
+    const a0 = (i / N) * Math.PI * 2, a1 = ((i + 1) / N) * Math.PI * 2;
+    if (i === 0) s.moveTo(rr * Math.cos(a0), rr * Math.sin(a0));
+    s.lineTo(ro * Math.cos(a1), ro * Math.sin(a1)); s.lineTo(rr * Math.cos(a1), rr * Math.sin(a1));
+  }
+  const h = new THREE.Path(); h.absarc(0, 0, 0.29, 0, Math.PI * 2, true); s.holes.push(h);
+  return s;
+}
+const ratchetGeo = new THREE.ExtrudeGeometry(ratchetShape(), { depth: 0.22, bevelEnabled: false }); ratchetGeo.translate(0, 0, -0.11);
+const ratchet = new THREE.Group(); ratchet.add(reg('ratchet', new THREE.Mesh(ratchetGeo, mat('gear')), 'gear'));
+ratchet.position.set(P.D.x, P.D.y, -0.55); scene.add(ratchet);
+const pawl = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.14, 0.2), mat('collar'));
+pawl.position.set(P.D.x + 0.55, P.D.y - 0.62, -0.55); pawl.rotation.z = 0.5; scene.add(pawl);
+
+// labels
+const tags = {
+  A: label('Shaft A · input', P.A.x - 0.2, P.A.y + 0.2, 3.9),
+  F: label('Shaft F · flywheel', P.F.x, P.F.y + 2.5, -5.1),
+  C: label('Shaft C · cluster', P.C.x - 0.4, P.C.y - 2.1, 2.15),
+  D: label('Shaft D · climber', P.D.x + 0.4, P.D.y - 1.3, -1.35),
+  colA: label('Collar A', P.A.x + 1.84, P.A.y + 1.84, 5.0),
+  colD: label('Collar D', P.D.x + 1.9, P.D.y, 5.0),
+  mot: label('NEO Vortex ×2 front', P.M1.x, P.M1.y + 1.5, -2.2),
+  motB: label('NEO Vortex ×2 back', P.M3.x + 1.5, P.M3.y, 5.2),
+  rat: label('Ratchet', P.D.x + 1.1, P.D.y - 0.9, -0.55),
+};
+
+// ---------- kinematics ----------
+function meshAngle(a1, N1, N2, c1, c2) {
+  const th = Math.atan2(c2.y - c1.y, c2.x - c1.x), k = N1 / N2;
+  return -k * a1 + th + Math.PI + k * th - Math.PI / N2;
+}
+const st = {
+  mode: 1, target: 1, phase: 'run', t: 0, ramp: 1, paused: false, motors: 4,
+  thA: 0, th60: 0, th30: 0, thD: 0, eng60: true, eng30: false, engD: 50,
+  off60: 0, off30: 0, offD: 0,
+  colA0: COLLAR.A[1], colA1: COLLAR.A[1], colD0: COLLAR.D[50], colD1: COLLAR.D[50],
+};
+const DUR = reduceMotion ? { down: 0.01, move: 0.01, up: 0.01 } : { down: 0.35, move: 0.5, up: 0.55 };
+
+const ACTIVE = {
+  base: ['pin1', 'pin2', 'pin3', 'pin4', 'g42f', 'g42b', 'shaftA', 'collarA'],
+  1: ['dog60', 'g20', 'shaftF', 'flywheel'],
+  2: ['dog30a', 'g72', 'shaftC', 'c30', 'dog50', 'collarD', 'shaftD', 'spool', 'ratchet'],
+  3: ['dog30a', 'g72', 'shaftC', 'c18', 'dog62', 'collarD', 'shaftD', 'spool', 'ratchet'],
+  0: [],
+};
+function recolor() {
+  const hot = new Set([...ACTIVE.base, ...ACTIVE[st.mode]]);
+  for (const [k, list] of Object.entries(parts)) {
+    for (const m of list) {
+      const base = BASE[m.userData.kind];
+      if (hot.has(k)) { m.material.color.copy(accentColor); m.material.emissive.copy(accentColor).multiplyScalar(0.18); }
+      else { m.material.color.setHex(base.color); m.material.emissive.setHex(0x000000); }
+    }
+  }
+  tags.F.element.classList.toggle('hot', st.mode === 1);
+  tags.D.element.classList.toggle('hot', st.mode === 2 || st.mode === 3);
+  tags.C.element.classList.toggle('hot', st.mode === 2 || st.mode === 3);
+  tags.A.element.classList.toggle('hot', true);
+}
+
+function ease(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+
+function setMode(m) {
+  if (m === st.target) return;
+  st.target = m;
+  if (st.phase === 'run' || st.phase === 'up') { st.phase = 'down'; st.t = 0; st.rampStart = st.ramp; }
+  updatePanel();
+}
+function beginMove() {
+  st.eng60 = false; st.eng30 = false;
+  const m = st.target; st.moveTarget = m;
+  const dTarget = m === 2 ? 50 : m === 3 ? 62 : st.engD;
+  if (dTarget !== st.engD) st.engD = 0; // free D while collar D moves
+  st.colA0 = collarA.position.z; st.colA1 = COLLAR.A[m];
+  st.colD0 = collarD.position.z; st.colD1 = dTarget === 50 ? COLLAR.D[50] : dTarget === 62 ? COLLAR.D[62] : collarD.position.z;
+  st.dTarget = dTarget;
+}
+function finishMove() {
+  const m = st.moveTarget;
+  st.eng60 = m === 1; st.eng30 = m === 2 || m === 3;
+  st.off60 = st.th60 - st.thA; st.off30 = st.th30 - st.thA;
+  st.engD = st.dTarget;
+  st.mode = m;
+  recolor(); updatePanel();
+}
+
+function step(dt) {
+  // phase machine
+  if (st.phase === 'down') {
+    st.t += dt; st.ramp = (st.rampStart ?? 1) * Math.max(0, 1 - st.t / DUR.down);
+    if (st.t >= DUR.down) { st.phase = 'move'; st.t = 0; st.ramp = 0; beginMove(); }
+  } else if (st.phase === 'move') {
+    st.t += dt; const k = ease(Math.min(1, st.t / DUR.move));
+    collarA.position.z = st.colA0 + (st.colA1 - st.colA0) * k;
+    collarD.position.z = st.colD0 + (st.colD1 - st.colD0) * k;
+    if (st.t >= DUR.move) {
+      finishMove();
+      if (st.target !== st.mode) { st.phase = 'down'; st.t = 0; st.rampStart = 0; }
+      else { st.phase = 'up'; st.t = 0; }
+    }
+  } else if (st.phase === 'up') {
+    st.t += dt; st.ramp = Math.min(1, st.t / DUR.up);
+    if (st.t >= DUR.up) { st.phase = 'run'; st.ramp = 1; }
+    if (st.target !== st.mode) { st.phase = 'down'; st.t = 0; st.rampStart = st.ramp; }
+  }
+  forkA.position.z = collarA.position.z; forkD.position.z = collarD.position.z;
+
+  const speed = Number(document.getElementById('speed').value) || 1;
+  const wMotor = st.paused ? 0 : speed * Math.PI * 2 * st.ramp; // motor rad/s (slowed for viewing)
+  const dA = -(14 / 42) * wMotor * dt;
+  st.thA += dA;
+  if (st.eng60) st.th60 = st.thA + st.off60;
+  if (st.eng30) st.th30 = st.thA + st.off30;
+
+  const thF = meshAngle(st.th60, 60, 20, P.A, P.F);
+  const thC = meshAngle(st.th30, 30, 72, P.A, P.C);
+  const a50 = meshAngle(thC, 30, 50, P.C, P.D);
+  const a62 = meshAngle(thC, 18, 62, P.C, P.D);
+  // keep D continuous when its engagement changes
+  if (st._lastEngD !== st.engD) {
+    if (st.engD === 50) st.offD = st.thD - a50;
+    if (st.engD === 62) st.offD = st.thD - a62;
+    st._lastEngD = st.engD;
+  }
+  if (st.engD === 50) st.thD = a50 + st.offD;
+  else if (st.engD === 62) st.thD = a62 + st.offD;
+
+  shaftA.rotation.z = st.thA; g42f.group.rotation.z = st.thA; g42b.group.rotation.z = st.thA; collarA.rotation.z = st.thA;
+  dog60.group.rotation.z = st.th60; dog30a.group.rotation.z = st.th30;
+  g20.group.rotation.z = thF; shaftF.rotation.z = thF; flywheel.rotation.z = thF;
+  g72.group.rotation.z = thC; c30.group.rotation.z = thC; c18.group.rotation.z = thC; shaftC.rotation.z = thC;
+  dog50.group.rotation.z = a50; dog62.group.rotation.z = a62;
+  shaftD.rotation.z = st.thD; collarD.rotation.z = st.thD; spool.rotation.z = st.thD; ratchet.rotation.z = st.thD;
+  for (const [k, mo] of Object.entries(motors)) mo.pin.group.rotation.z = meshAngle(st.thA, 42, 14, P.A, P[k]);
+}
+st._lastEngD = 50;
+
+// ---------- panel ----------
+const DATA = {
+  1: { ratio: '1 : 1', rpm: '6,784 RPM', tq: { 2: '1.1 Nm', 4: '2.3 Nm' }, xl: 'Wheel surface, 4 in', x: { 2: '36 m/s', 4: '36 m/s' },
+       path: ['Motors', '42T', 'Shaft A', '60T dog', '20T', 'Shaft F', 'Flywheel'] },
+  2: { ratio: '12 : 1', rpm: '565 RPM', tq: { 2: '13 Nm', 4: '26 Nm' }, xl: 'Pull @ 40 A, 1.25 in spool', x: { 2: '83 kgf', 4: '167 kgf' },
+       path: ['Motors', '42T', 'Shaft A', '30T dog', '72T', 'Shaft C', '30T', '50T dog', 'Shaft D', 'Spool'] },
+  3: { ratio: '24.8 : 1', rpm: '274 RPM', tq: { 2: '27 Nm', 4: '54 Nm' }, xl: 'Pull @ 40 A, 1.25 in spool', x: { 2: '173 kgf', 4: '345 kgf' },
+       path: ['Motors', '42T', 'Shaft A', '30T dog', '72T', 'Shaft C', '18T', '62T dog', 'Shaft D', 'Spool'] },
+  0: { ratio: '—', rpm: '0 RPM', tq: { 2: '0 Nm', 4: '0 Nm' }, xl: 'Output', x: { 2: 'None', 4: 'None' }, path: [] },
+};
+function updatePanel() {
+  for (const b of document.querySelectorAll('.mode')) b.setAttribute('aria-pressed', String(Number(b.dataset.mode) === st.target));
+  const d = DATA[st.target];
+  document.getElementById('rRatio').textContent = d.ratio;
+  document.getElementById('rRpm').textContent = d.rpm;
+  document.getElementById('rTqLabel').textContent = `Torque, ${st.motors} motors @ 40 A`;
+  document.getElementById('rTq').textContent = d.tq[st.motors];
+  document.getElementById('rExtraLabel').textContent = d.xl;
+  document.getElementById('rExtra').textContent = d.x[st.motors];
+  const pathEl = document.getElementById('path'); pathEl.textContent = '';
+  if (!d.path.length) {
+    const s = document.createElement('span'); s.className = 'none';
+    s.textContent = 'Collar A centred: motors spin shaft A, both dog gears turn free.'; pathEl.append(s);
+  } else d.path.forEach((p, i) => {
+    if (i) { const a = document.createElement('span'); a.className = 'arrow'; a.textContent = '→'; pathEl.append(a); }
+    const c = document.createElement('span'); c.className = 'chip'; c.textContent = p; pathEl.append(c);
+  });
+}
+function updateStatus() {
+  const el = document.getElementById('status'), tx = document.getElementById('statusText');
+  const names = { 1: 'Gear 1', 2: 'Gear 2', 3: 'Gear 3', 0: 'Neutral' };
+  const text = st.phase === 'down' ? 'Stopping motors' : st.phase === 'move' ? 'Moving collar' : st.phase === 'up' ? 'Spinning up' : `Engaged · ${names[st.mode]}`;
+  if (tx.textContent !== text) tx.textContent = text;
+  el.classList.toggle('busy', st.phase !== 'run');
+}
+
+document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => setMode(Number(b.dataset.mode))));
+document.querySelectorAll('[data-motors]').forEach(b => b.addEventListener('click', () => {
+  st.motors = Number(b.dataset.motors);
+  document.querySelectorAll('[data-motors]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  const four = st.motors === 4;
+  for (const k of ['M3', 'M4']) { motors[k].grp.visible = four; motors[k].pin.group.visible = four; }
+  g42b.group.visible = four; tags.motB.visible = four;
+  updatePanel();
+}));
+document.getElementById('showPlates').addEventListener('change', e => plates.forEach(p => { p.visible = e.target.checked; }));
+document.getElementById('showLabels').addEventListener('change', e => { labelsEl.hidden = !e.target.checked; });
+document.getElementById('pause').addEventListener('click', e => {
+  st.paused = !st.paused; e.currentTarget.textContent = st.paused ? 'Play' : 'Pause';
+});
+document.getElementById('resetView').addEventListener('click', () => {
+  camera.position.copy(HOME.pos); controls.target.copy(HOME.target); controls.update();
+});
+
+// ---------- sizing + loop ----------
+function resize() {
+  const w = stageEl.clientWidth, h = stageEl.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false); labelRenderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.fov = w < 520 ? 44 : 34;
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stageEl);
+resize();
+applyTheme();
+updatePanel();
+document.getElementById('loading').hidden = true;
+
+const clock = new THREE.Clock();
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  step(dt); updateStatus();
+  controls.update();
+  renderer.render(scene, camera); labelRenderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
