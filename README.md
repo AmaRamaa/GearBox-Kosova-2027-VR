@@ -17,6 +17,7 @@ These are layout models for checking spacing, ratios and power flow. They are no
 | [A](version-a-two-output/) | 4 shafts in a cluster | 2–4 NEO Vortex | Flywheel + one climber shaft with 2 speeds | 2 dog collars, pneumatic |
 | [B](version-b-inline-4/) | 9 shafts in one line, flat | 4 NEO Vortex in a row | Flywheel, climber fast, climber strong | 3 dog collars, pneumatic |
 | [C](version-c-inline-4-improved/) | Same as B, refined | 4 NEO Vortex in a row | Flywheel, climber fast, climber strong | 1 servo + selector bar |
+| [D](version-d-hyperdrive/) | C plus a camshaft on top, planetary, cycloid, differential | 4 NEO Vortex in a row | Flywheel (2 speeds), 2 climb hooks, haul, boost, park | Servo camshaft, 7 positions, synchronizers |
 
 ## Ratios (NEO Vortex, 6,784 RPM free)
 
@@ -31,6 +32,10 @@ Torque assumes 4 motors at a 40 A current limit and 95% efficiency per stage. Pu
 | B / C | Climber fast (Output 2) | 8.57:1 | 791 RPM | 19.6 Nm | 126 kgf |
 | B / C | Climber strong (Output 3) | 24.5:1 | 277 RPM | 53 Nm | 341 kgf |
 | C | Flywheel (Output 1, belt) | 1:1 | 6,784 RPM | 2.3 Nm | – |
+| D | 1 Flywheel spin-up (planetary low) | 2.67:1 | 2,544 RPM | 6.0 Nm | – |
+| D | 2 Flywheel cruise (planetary direct) | 1:1 | 6,784 RPM | 2.3 Nm | – |
+| D | 3 Climb (differential, 2 hooks) | 8.57:1 | 791 RPM | 9.6 Nm per hook | 2 × 62 kgf |
+| D | 4 Haul (cycloidal 8:1) | 24:1 | 283 RPM | 52 Nm | 333 kgf |
 
 ## Version A: two outputs
 
@@ -70,6 +75,21 @@ Changes from B:
 5. Encoders on both climber outputs and a position sensor on the selector bar.
 
 Plate size: about 13.8 × 2.9 in.
+
+## Version D: Hyperdrive (the over-engineered one)
+
+Everything from C, plus every mechanism we could justify, and some we couldn't.
+
+- **Camshaft shifter.** An engine-style camshaft runs along the top, turned by a servo with an absolute encoder. Six cams push the three forks, the planetary brake, the direct clutch and the park pawl through 7 positions: P, N, 1, 2, 3, 4, B. Positions sit 51.4° apart, so shifting rolls through the gears in order like a motorcycle.
+- **Synchronizer cones** on all three dog clutches match speeds before the dogs lock, so the motors keep running during shifts.
+- **2-speed planetary on the flywheel** (sun 36T, planets 12T, ring 60T). A band brake on the ring gives 2.67:1 for fast spin-up; a direct clutch locks it at 1:1 to shoot.
+- **Boost (B).** Keeps the spun-up flywheel connected while the climber hauls. A 1 kg, 4 in flywheel at 6,784 RPM stores about 326 J, enough on its own to lift a 70 kg robot about 0.47 m. A slip clutch on the 66T pulley protects the belt.
+- **Cycloidal 8:1 final drive** (8 lobes, 9 pins) on the haul output, coaxial with shaft C. It replaces version C's shaft I and two gear stages.
+- **Open differential** on the climb output drives two spools, so both hooks pull with the same force even when one side touches first.
+- **Park pawl** on shaft B locks the whole gear row (P).
+- The camshaft sits above the plates, so D is about 0.7 in taller than C.
+
+Honest note: this is a showcase of mechanisms, not a recommendation. Each feature adds weight, parts and failure points; version C is the one to build for a season.
 
 ## Parts
 
