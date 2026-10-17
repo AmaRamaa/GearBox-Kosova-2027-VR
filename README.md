@@ -4,6 +4,8 @@ Shifting gearbox concepts for FRC 2027, built from REV ION parts (20DP steel gea
 One motor pack drives a flywheel or a climber, picked by dog collars, with a neutral position.
 
 Each folder has an interactive 3D model. Open its `index.html` in a browser (it needs internet to load three.js).
+
+**Want to hold it?** [`version-c-inline-4-improved/print/`](version-c-inline-4-improved/print/) has a full-size, hand-cranked printable model of version C: STLs, ready-to-slice 3MF beds for a 350 mm printer (Creality K2 Plus), and an assembly guide.
 Drag to rotate, scroll to zoom, and click the gear buttons to watch a shift: stop motors, move collar, spin up.
 
 These are layout models for checking spacing, ratios and power flow. They are not CAD files.
@@ -62,7 +64,7 @@ Torque assumes 4 motors at a 40 A current limit and 95% efficiency per stage. Pu
 Changes from B:
 
 1. **Selector bar.** A flat bar along the top edge has an angled slot for each fork. One servo slides it through 4 positions: Output 1, Neutral, Output 2, Output 3. Only one output can ever be engaged, and no pneumatics are needed.
-2. **Belt-driven flywheel.** A GT2 3mm belt, 54T pulley on A to 18T on the flywheel shaft, gives a true 1:1. Center distance is about 3.4 in, so roughly a 95-tooth (285 mm) belt; set the final distance from the belt you buy.
+2. **Belt-driven flywheel.** A GT2 3mm belt, 66T pulley on A to 22T on the flywheel shaft, gives a true 1:1. (An 18T pulley is too small to fit a 1/2in hex shaft, so 66T/22T is the smallest pair that works.) Center distance is about 3.4 in, so roughly a 103-tooth (310 mm) belt; set the final distance from the belt you buy.
 3. **Bearing bridges.** Output 2 and Output 3 shafts start behind row 2, which removes the 1.5 mm rubs in version B.
 4. 3-tooth chamfered dogs, pocketed plates and a 1/8in middle plate.
 5. Encoders on both climber outputs and a position sensor on the selector bar.
