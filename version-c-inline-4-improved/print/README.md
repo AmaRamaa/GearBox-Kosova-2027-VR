@@ -50,6 +50,8 @@ Distances are measured from the **front end of each shaft**. "Glue" parts are fi
 
 ## Assembly
 
+**Illustrated step-by-step guide with a picture for every step: [ASSEMBLY.md](ASSEMBLY.md).** Short version:
+
 1. Glue the fixed gears onto shafts A, B, C, I and F, and the pinions onto the motor axles, using the table. Let them dry.
 2. Push the 8 short pillars into the front plate.
 3. From the inside, put shafts A, B and C (42T gears inside) and the 4 motor axles (pinions inside) through the front plate. Turn them so every pinion meshes with the 42T gears on both sides.
