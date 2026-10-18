@@ -5,7 +5,7 @@ One motor pack drives a flywheel or a climber, picked by dog collars, with a neu
 
 Each folder has an interactive 3D model. Open its `index.html` in a browser (it needs internet to load three.js).
 
-**Want to hold it?** [`version-c-inline-4-improved/print/`](version-c-inline-4-improved/print/) has a full-size, hand-cranked printable model of version C: STLs, ready-to-slice 3MF beds for a 350 mm printer (Creality K2 Plus), and an assembly guide.
+**Want to hold it?** [`version-c-inline-4-improved/print/`](version-c-inline-4-improved/print/) has a full-size, hand-cranked printable model of version C: STLs, ready-to-slice 3MF beds for a 350 mm printer (Creality K2 Plus), and an assembly guide. A [70% one-plate version](version-c-inline-4-improved/print/one-plate-70pct/) puts every part on a single bed.
 Drag to rotate, scroll to zoom, and click the gear buttons to watch a shift: stop motors, move collar, spin up.
 
 These are layout models for checking spacing, ratios and power flow. They are not CAD files.

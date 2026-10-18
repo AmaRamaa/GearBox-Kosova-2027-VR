@@ -4,6 +4,8 @@ A full-size, hand-cranked model of the inline-4 gearbox (version C). The gear te
 
 Every part was checked in a virtual assembly at all four selector positions (Output 1, Neutral, Output 2, Output 3). No parts collide, the gears mesh, and the dog lugs interleave when engaged.
 
+**Want it on one plate?** [`one-plate-70pct/`](one-plate-70pct/) has the same model at 70% scale, with every part on a single 350 × 350 mm bed and the fits kept at full-size clearances.
+
 ## What to print
 
 | File | Printer bed | Contents |
