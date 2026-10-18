@@ -2,6 +2,8 @@
 
 The same hand-cranked model as the 1:1 version, scaled to **70%** so all 79 PLA parts fit on **one 350 × 350 mm bed** (Creality K2 Plus). 70% is the largest size that still fits on one bed.
 
+**Checked before printing.** Gear meshes through a full rotation, every part against every other part in 3D, shifting at all 4 bar positions, fits, shafts and belt. The checks found two shifting faults, now fixed. Details are in [checks/](checks/).
+
 **Fits are not scaled.** The model is built at 1:1 with every clearance divided by 0.7, then scaled down, so each slip fit, sliding fit and peg hole has the same real clearance (in mm) as the full-size model. The scaled parts passed the same collision check at all 4 selector positions.
 
 ![One bed](bed_one_plate_PLA_70pct.png)

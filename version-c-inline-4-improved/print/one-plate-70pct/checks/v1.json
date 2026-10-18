@@ -1,0 +1,1266 @@
+[
+ {
+  "a": "pillar_f0",
+  "b": "plate_front",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.208,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f1",
+  "b": "plate_front",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.187,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f2",
+  "b": "plate_front",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.175,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f3",
+  "b": "plate_front",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.175,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f4",
+  "b": "plate_front",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.185,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f5",
+  "b": "plate_front",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.149,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f6",
+  "b": "plate_front",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.153,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f7",
+  "b": "plate_front",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.181,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "axle_M1",
+  "b": "plate_front",
+  "what": "axle in plate hole",
+  "gap": 0.246,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "disc_M1",
+  "b": "plate_front",
+  "what": "crank disc face",
+  "gap": 0.35,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M2",
+  "b": "plate_front",
+  "what": "axle in plate hole",
+  "gap": 0.246,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "disc_M2",
+  "b": "plate_front",
+  "what": "crank disc face",
+  "gap": 0.35,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M3",
+  "b": "plate_front",
+  "what": "axle in plate hole",
+  "gap": 0.246,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "disc_M3",
+  "b": "plate_front",
+  "what": "crank disc face",
+  "gap": 0.35,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M4",
+  "b": "plate_front",
+  "what": "axle in plate hole",
+  "gap": 0.246,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "disc_M4",
+  "b": "plate_front",
+  "what": "crank disc face",
+  "gap": 0.35,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_front",
+  "b": "shaft_A",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_front",
+  "b": "shaft_B",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_front",
+  "b": "shaft_C",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "pillar_f0",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.127,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f1",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.002,
+  "pen": 0.175,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f2",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.313,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f3",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.228,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f4",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.175,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f5",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.134,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f6",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.186,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_f7",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.175,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b0",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.002,
+  "pen": 0.182,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b1",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.004,
+  "pen": 0.13,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b2",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.003,
+  "pen": 0.268,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b3",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.125,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b4",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.003,
+  "pen": 0.177,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b5",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.124,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b6",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.175,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b7",
+  "b": "plate_middle",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.194,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "bridge_O2",
+  "b": "plate_middle",
+  "what": "bridge leg pin in plate hole",
+  "gap": 0.0,
+  "pen": 0.232,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "bridge_O3",
+  "b": "plate_middle",
+  "what": "bridge leg pin in plate hole",
+  "gap": 0.0,
+  "pen": 0.253,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "plate_middle",
+  "b": "shaft_F",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M1",
+  "b": "plate_middle",
+  "what": "axle in plate hole",
+  "gap": 0.246,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M2",
+  "b": "plate_middle",
+  "what": "axle in plate hole",
+  "gap": 0.246,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M3",
+  "b": "plate_middle",
+  "what": "axle in plate hole",
+  "gap": 0.246,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_middle",
+  "b": "shaft_A",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_middle",
+  "b": "shaft_B",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_middle",
+  "b": "shaft_C",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_middle",
+  "b": "shaft_I",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_middle",
+  "b": "selector_bar",
+  "what": "bar sliding on plate edges",
+  "gap": 0.0,
+  "pen": 0.173,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "plate_middle",
+  "b": "spacer_A",
+  "what": "spacer thrust face",
+  "gap": 0.035,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap3",
+  "b": "plate_middle",
+  "what": "end cap (set by hand)",
+  "gap": 0.14,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "pillar_b0",
+  "b": "plate_back",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.215,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b1",
+  "b": "plate_back",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.175,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b2",
+  "b": "plate_back",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.193,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b3",
+  "b": "plate_back",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.1,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b4",
+  "b": "plate_back",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.176,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b5",
+  "b": "plate_back",
+  "what": "peg in plate hole",
+  "gap": 0.001,
+  "pen": 0.231,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b6",
+  "b": "plate_back",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.175,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "pillar_b7",
+  "b": "plate_back",
+  "what": "peg in plate hole",
+  "gap": 0.0,
+  "pen": 0.106,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "plate_back",
+  "b": "shaft_F",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_back",
+  "b": "shaft_A",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_back",
+  "b": "shaft_B",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_back",
+  "b": "shaft_C",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_back",
+  "b": "shaft_I",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_back",
+  "b": "shaft_O2",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_back",
+  "b": "shaft_O3",
+  "what": "shaft in plate hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O2",
+  "b": "plate_back",
+  "what": "separate parts",
+  "gap": 0.728,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O3",
+  "b": "plate_back",
+  "what": "separate parts",
+  "gap": 0.728,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_back",
+  "b": "selector_bar",
+  "what": "bar sliding on plate edges",
+  "gap": 0.0,
+  "pen": 0.191,
+  "where": "Output 1, gear angle 0.0 deg"
+ },
+ {
+  "a": "plate_back",
+  "b": "spool_O2",
+  "what": "separate parts",
+  "gap": 0.357,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_back",
+  "b": "spool_O3",
+  "what": "separate parts",
+  "gap": 0.357,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap0",
+  "b": "plate_back",
+  "what": "end cap (set by hand)",
+  "gap": 0.14,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap1",
+  "b": "plate_back",
+  "what": "end cap (set by hand)",
+  "gap": 0.14,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap2",
+  "b": "plate_back",
+  "what": "end cap (set by hand)",
+  "gap": 0.14,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap5",
+  "b": "plate_back",
+  "what": "end cap (set by hand)",
+  "gap": 0.14,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O2",
+  "b": "pillar_f2",
+  "what": "separate parts",
+  "gap": 0.263,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O2",
+  "b": "pillar_f3",
+  "what": "separate parts",
+  "gap": 0.263,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O3",
+  "b": "pillar_f6",
+  "what": "separate parts",
+  "gap": 0.263,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O3",
+  "b": "pillar_f7",
+  "what": "separate parts",
+  "gap": 0.263,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O2",
+  "b": "pulley_A",
+  "what": "separate parts",
+  "gap": 0.592,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O2",
+  "b": "shaft_O2",
+  "what": "shaft in bridge hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O2",
+  "b": "spacer_O2",
+  "what": "spacer thrust face",
+  "gap": 0.035,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O2",
+  "b": "cap6",
+  "what": "end cap (set by hand)",
+  "gap": 0.14,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O3",
+  "b": "shaft_O3",
+  "what": "shaft in bridge hole",
+  "gap": 0.294,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O3",
+  "b": "spacer_O3",
+  "what": "spacer thrust face",
+  "gap": 0.035,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "bridge_O3",
+  "b": "cap7",
+  "what": "end cap (set by hand)",
+  "gap": 0.14,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "pulley_F",
+  "b": "shaft_F",
+  "what": "pulley on shaft",
+  "gap": 0.149,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "flywheel",
+  "b": "shaft_F",
+  "what": "flywheel on shaft (glue)",
+  "gap": 0.148,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap3",
+  "b": "shaft_F",
+  "what": "end cap on shaft",
+  "gap": 0.044,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap4",
+  "b": "shaft_F",
+  "what": "end cap on shaft",
+  "gap": 0.044,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g42_A",
+  "b": "pinion_M1",
+  "what": "gear mesh",
+  "gap": 0.189,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g42_A",
+  "b": "pinion_M2",
+  "what": "gear mesh",
+  "gap": 0.189,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g42_A",
+  "b": "shaft_A",
+  "what": "gear on shaft (glue)",
+  "gap": 0.15,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g42_B",
+  "b": "pinion_M2",
+  "what": "gear mesh",
+  "gap": 0.189,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g42_B",
+  "b": "pinion_M3",
+  "what": "gear mesh",
+  "gap": 0.189,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g42_B",
+  "b": "shaft_B",
+  "what": "gear on shaft (glue)",
+  "gap": 0.15,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g42_C",
+  "b": "pinion_M3",
+  "what": "gear mesh",
+  "gap": 0.189,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g42_C",
+  "b": "pinion_M4",
+  "what": "gear mesh",
+  "gap": 0.189,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g42_C",
+  "b": "shaft_C",
+  "what": "gear on shaft (glue)",
+  "gap": 0.15,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M1",
+  "b": "pinion_M1",
+  "what": "pinion on axle (glue)",
+  "gap": 0.198,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M1",
+  "b": "disc_M1",
+  "what": "crank disc on axle",
+  "gap": 0.195,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "disc_M1",
+  "b": "shaft_A",
+  "what": "separate parts",
+  "gap": 0.7,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M2",
+  "b": "pinion_M2",
+  "what": "pinion on axle (glue)",
+  "gap": 0.198,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M2",
+  "b": "disc_M2",
+  "what": "crank disc on axle",
+  "gap": 0.195,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "disc_M2",
+  "b": "shaft_A",
+  "what": "separate parts",
+  "gap": 0.7,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "disc_M2",
+  "b": "shaft_B",
+  "what": "separate parts",
+  "gap": 0.7,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M3",
+  "b": "pinion_M3",
+  "what": "pinion on axle (glue)",
+  "gap": 0.198,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M3",
+  "b": "disc_M3",
+  "what": "crank disc on axle",
+  "gap": 0.195,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "disc_M3",
+  "b": "shaft_B",
+  "what": "separate parts",
+  "gap": 0.7,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "disc_M3",
+  "b": "shaft_C",
+  "what": "separate parts",
+  "gap": 0.7,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M4",
+  "b": "pinion_M4",
+  "what": "pinion on axle (glue)",
+  "gap": 0.198,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "axle_M4",
+  "b": "disc_M4",
+  "what": "crank disc on axle",
+  "gap": 0.195,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "disc_M4",
+  "b": "shaft_C",
+  "what": "separate parts",
+  "gap": 0.7,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "pulley_A",
+  "b": "shaft_A",
+  "what": "pulley on shaft",
+  "gap": 0.299,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_A",
+  "b": "pulley_A",
+  "what": "dog lugs",
+  "gap": 0.28,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "pulley_A",
+  "b": "spacer_A",
+  "what": "spacer thrust face",
+  "gap": 0.115,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "pulley_A",
+  "b": "washer_A",
+  "what": "washer thrust face",
+  "gap": 0.15,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap6",
+  "b": "pulley_A",
+  "what": "end cap (set by hand)",
+  "gap": 0.994,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_A",
+  "b": "shaft_A",
+  "what": "collar slides on shaft",
+  "gap": 0.198,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_A",
+  "b": "spacer_A",
+  "what": "spacer spins on shaft",
+  "gap": 0.347,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_A",
+  "b": "washer_A",
+  "what": "washer on shaft (glue)",
+  "gap": 0.142,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap0",
+  "b": "shaft_A",
+  "what": "end cap on shaft",
+  "gap": 0.044,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g14_B",
+  "b": "shaft_B",
+  "what": "gear on shaft (glue)",
+  "gap": 0.149,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap1",
+  "b": "shaft_B",
+  "what": "end cap on shaft",
+  "gap": 0.044,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g14_C",
+  "b": "shaft_C",
+  "what": "gear on shaft (glue)",
+  "gap": 0.149,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap2",
+  "b": "shaft_C",
+  "what": "end cap on shaft",
+  "gap": 0.044,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g40_I",
+  "b": "shaft_I",
+  "what": "gear on shaft (glue)",
+  "gap": 0.15,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g14_I",
+  "b": "shaft_I",
+  "what": "gear on shaft (glue)",
+  "gap": 0.149,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap5",
+  "b": "shaft_I",
+  "what": "end cap on shaft",
+  "gap": 0.044,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "g14_C",
+  "b": "g40_I",
+  "what": "gear mesh",
+  "gap": 0.156,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap7",
+  "b": "g40_I",
+  "what": "separate parts",
+  "gap": 0.994,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "dog40_O2",
+  "b": "g14_B",
+  "what": "gear mesh",
+  "gap": 0.156,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "dog40_O2",
+  "b": "shaft_O2",
+  "what": "dog gear spins on shaft",
+  "gap": 0.3,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "dog40_O2",
+  "b": "spacer_O2",
+  "what": "spacer thrust face",
+  "gap": 0.115,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "dog40_O2",
+  "b": "washer_O2",
+  "what": "washer thrust face",
+  "gap": 0.15,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "dog40_O3",
+  "b": "g14_I",
+  "what": "gear mesh",
+  "gap": 0.156,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "dog40_O3",
+  "b": "shaft_O3",
+  "what": "dog gear spins on shaft",
+  "gap": 0.3,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "dog40_O3",
+  "b": "spacer_O3",
+  "what": "spacer thrust face",
+  "gap": 0.115,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "dog40_O3",
+  "b": "washer_O3",
+  "what": "washer thrust face",
+  "gap": 0.15,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O2",
+  "b": "shaft_O2",
+  "what": "collar slides on shaft",
+  "gap": 0.198,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_O2",
+  "b": "spacer_O2",
+  "what": "spacer spins on shaft",
+  "gap": 0.347,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_O2",
+  "b": "washer_O2",
+  "what": "washer on shaft (glue)",
+  "gap": 0.142,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_O2",
+  "b": "spool_O2",
+  "what": "spool on shaft (glue)",
+  "gap": 0.148,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap6",
+  "b": "shaft_O2",
+  "what": "end cap on shaft",
+  "gap": 0.044,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap8",
+  "b": "shaft_O2",
+  "what": "end cap on shaft",
+  "gap": 0.044,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O3",
+  "b": "shaft_O3",
+  "what": "collar slides on shaft",
+  "gap": 0.198,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_O3",
+  "b": "spacer_O3",
+  "what": "spacer spins on shaft",
+  "gap": 0.347,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_O3",
+  "b": "washer_O3",
+  "what": "washer on shaft (glue)",
+  "gap": 0.142,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_O3",
+  "b": "spool_O3",
+  "what": "spool on shaft (glue)",
+  "gap": 0.148,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap7",
+  "b": "shaft_O3",
+  "what": "end cap on shaft",
+  "gap": 0.044,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap9",
+  "b": "shaft_O3",
+  "what": "end cap on shaft",
+  "gap": 0.044,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_A",
+  "b": "fork_A",
+  "what": "fork in collar groove",
+  "gap": 0.125,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_A",
+  "b": "washer_A",
+  "what": "washer inside collar lugs (turn together)",
+  "gap": 0.41,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "fork_A",
+  "b": "selector_bar",
+  "what": "fork peg in bar slot",
+  "gap": 0.1,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O2",
+  "b": "fork_O2",
+  "what": "fork in collar groove",
+  "gap": 0.125,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "fork_O2",
+  "b": "selector_bar",
+  "what": "fork peg in bar slot",
+  "gap": 0.34,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O3",
+  "b": "fork_O3",
+  "what": "fork in collar groove",
+  "gap": 0.125,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "fork_O3",
+  "b": "selector_bar",
+  "what": "fork peg in bar slot",
+  "gap": 0.34,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap4",
+  "b": "flywheel",
+  "what": "separate parts",
+  "gap": 0.14,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap8",
+  "b": "spool_O2",
+  "what": "separate parts",
+  "gap": 0.14,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "cap9",
+  "b": "spool_O3",
+  "what": "separate parts",
+  "gap": 0.14,
+  "pen": 0.0,
+  "where": ""
+ }
+]

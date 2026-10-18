@@ -1,0 +1,162 @@
+[
+ {
+  "a": "plate_middle",
+  "b": "selector_bar",
+  "what": "bar sliding on plate edges",
+  "gap": 0.0,
+  "pen": 0.157,
+  "where": "Output 2, gear angle 0.0 deg"
+ },
+ {
+  "a": "collar_O3",
+  "b": "plate_back",
+  "what": "separate parts",
+  "gap": 0.728,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "plate_back",
+  "b": "selector_bar",
+  "what": "bar sliding on plate edges",
+  "gap": 0.0,
+  "pen": 0.22,
+  "where": "Output 2, gear angle 0.0 deg"
+ },
+ {
+  "a": "pulley_A",
+  "b": "washer_A",
+  "what": "washer thrust face",
+  "gap": 0.15,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_A",
+  "b": "shaft_A",
+  "what": "collar slides on shaft",
+  "gap": 0.198,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_A",
+  "b": "washer_A",
+  "what": "washer on shaft (glue)",
+  "gap": 0.142,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O2",
+  "b": "dog40_O2",
+  "what": "dog lugs",
+  "gap": 0.28,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "dog40_O2",
+  "b": "washer_O2",
+  "what": "washer thrust face",
+  "gap": 0.15,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "dog40_O3",
+  "b": "washer_O3",
+  "what": "washer thrust face",
+  "gap": 0.15,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O2",
+  "b": "shaft_O2",
+  "what": "collar slides on shaft",
+  "gap": 0.198,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_O2",
+  "b": "washer_O2",
+  "what": "washer on shaft (glue)",
+  "gap": 0.142,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O3",
+  "b": "shaft_O3",
+  "what": "collar slides on shaft",
+  "gap": 0.198,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "shaft_O3",
+  "b": "washer_O3",
+  "what": "washer on shaft (glue)",
+  "gap": 0.142,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_A",
+  "b": "fork_A",
+  "what": "fork in collar groove",
+  "gap": 0.125,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "fork_A",
+  "b": "selector_bar",
+  "what": "fork peg in bar slot",
+  "gap": 0.348,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O2",
+  "b": "fork_O2",
+  "what": "fork in collar groove",
+  "gap": 0.125,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O2",
+  "b": "washer_O2",
+  "what": "washer inside collar lugs (turn together)",
+  "gap": 0.41,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "fork_O2",
+  "b": "selector_bar",
+  "what": "fork peg in bar slot",
+  "gap": 0.1,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "collar_O3",
+  "b": "fork_O3",
+  "what": "fork in collar groove",
+  "gap": 0.125,
+  "pen": 0.0,
+  "where": ""
+ },
+ {
+  "a": "fork_O3",
+  "b": "selector_bar",
+  "what": "fork peg in bar slot",
+  "gap": 0.1,
+  "pen": 0.0,
+  "where": ""
+ }
+]

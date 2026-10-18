@@ -1,0 +1,48 @@
+A. Shifting: dog lugs and selector bar
+     collar travel 2.24 mm, lug overlap 1.12 mm, worst position error +/-0.47 mm (slot 0.70 + groove 0.25 play)
+  OK   engaged: lugs overlap at least 0.65 mm in the worst case
+  OK   released: lugs clear by at least 0.65 mm in the worst case
+  OK   dog gears and dog pulley are trapped between spacer and washer with 0.27 mm end play (spin free, cannot drift)
+  OK   engaged collar clears the washer by 0.41 mm; if pushed further its lug tips bottom on the gear first (0.28 mm), and collar, washer and gear all turn together then. Lugs pass outside the washer (0.49 mm radial)
+  OK   bar at Output 1 (flywheel)  engages ['A']
+  OK   bar at Neutral              engages nothing
+  OK   bar at Output 2 (fast)      engages ['O2']
+  OK   bar at Output 3 (strong)    engages ['O3']
+  OK   slot A: the fork peg slides through all 4 positions without jamming (min Z play 0.20 mm)
+  OK   slot O2: the fork peg slides through all 4 positions without jamming (min Z play 0.20 mm)
+  OK   slot O3: the fork peg slides through all 4 positions without jamming (min Z play 0.20 mm)
+B. Fits (real clearance at 70%, same as the 1:1 model)
+  OK   fixed gears on shaft (glue)                      0.40 mm
+  OK   collar slides on shaft                           0.50 mm
+  OK   end cap on shaft (snug)                          0.15 mm
+  OK   dog gear / pulley / plate hole over hex corners  0.60 mm
+  OK   pinion on D axle                                 0.20 mm
+  OK   axle in plate hole                               0.50 mm
+  OK   fork in collar groove                            0.25 mm
+  OK   pillar peg in plate hole (diagonal)              0.11 mm
+  OK   bridge pin in plate hole                         0.50 mm
+C. Gear mesh widths: every pair of meshing gears sits in the same lane
+  OK   pinion / 42T row               face overlap 8.9 mm of 8.9
+  OK   C 14T / I 40T                  face overlap 8.9 mm of 8.9
+  OK   B 14T / Output 2 dog gear      face overlap 8.9 mm of 8.9
+  OK   I 14T / Output 3 dog gear      face overlap 8.9 mm of 8.9
+D. Shafts are held by two supports and capped
+  OK   shaft A    76.0 mm long sits in 3 supports, at least 92% of each support's thickness (ends flush-ish with the front plate on purpose)
+  OK   shaft B    76.0 mm long sits in 3 supports, at least 92% of each support's thickness (ends flush-ish with the front plate on purpose)
+  OK   shaft C    76.0 mm long sits in 3 supports, at least 92% of each support's thickness (ends flush-ish with the front plate on purpose)
+  OK   shaft I    56.8 mm long sits in 2 supports, at least 100% of each support's thickness
+  OK   shaft F    75.6 mm long sits in 2 supports, at least 100% of each support's thickness
+  OK   shaft O2   60.8 mm long sits in 2 supports, at least 100% of each support's thickness
+  OK   shaft O3   60.8 mm long sits in 2 supports, at least 100% of each support's thickness
+E. Flywheel belt
+  OK   belt path 210 mm, TPU ring 206 mm (98% so it is stretched tight); or a rubber band about 189 mm around (95 mm long laid flat)
+F. Smallest printed features
+  OK   gear tooth module            0.89 mm
+  OK   pillar peg (square)          2.52 mm
+  OK   bridge pin diameter          2.10 mm
+  OK   fork thickness               2.13 mm
+  OK   dog lug height               1.40 mm
+  OK   middle plate thickness       2.22 mm
+  OK   washer wall                  1.95 mm
+
+ALL FUNCTIONAL CHECKS PASSED
