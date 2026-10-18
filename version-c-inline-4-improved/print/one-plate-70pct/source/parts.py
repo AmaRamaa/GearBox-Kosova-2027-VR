@@ -24,9 +24,9 @@ D_BORE = (4.0 + c(0.2), 3.3 + c(0.2))
 # --- Z stations (mm from front plate inner face)
 FRONT = (-6.35, 0.0); MIDDLE = (21.59, 24.765); BACK = (91.44, 97.79)
 L1 = (5.08, 17.78); L2 = (30.48, 43.18); L3 = (63.5, 76.2)
-LUG_H = 2.0; LUG_OVERLAP = 1.6; TRAVEL = 2.4
+LUG_H = 2.0; LUG_OVERLAP = 1.6; TRAVEL = 3.2          # travel > overlap + selector slack, so the lugs always clear
 COLLAR_BODY = 8.6; GROOVE_C = 3.7          # groove centre measured from the collar's far (non-lug) end
-FORK_T = 3.4 - c(0.4)
+FORK_T = 3.4 - c(0.25)                    # collar groove is 3.4 wide
 def _zl(dog_top): return dog_top - LUG_OVERLAP + LUG_H   # collar lug-base Z when engaged
 ZL = {'A': _zl(L2[1] + LUG_H), 'O2': _zl(L3[1] + LUG_H), 'O3': _zl(L3[1] + LUG_H)}
 Z_LUGBASE = {k: (v, v + TRAVEL) for k, v in ZL.items()}                       # (in, out)
@@ -86,13 +86,16 @@ CAPB = lambda th: rhex_r(th, *BORE_CAP)
 ROUND = lambda th: np.full_like(th, ROUND_BORE)
 DBORE = lambda th: d_r(th, *D_BORE)
 
+LUG_RI, LUG_RO = 10.6, 14.0
+COLLAR_R, GROOVE_R = 14.6, 11.2
+WASHER_R, WASHER_L = 9.9, 1.6
 def lugs(z0, z1, start=0.0):
-    """3 dog lugs, 30 degrees wide, in the band r 8.4..12.2 mm."""
+    """3 dog lugs, 30 degrees wide, in the band r 10.6..14.0 mm (outside the retaining washer)."""
     out = []
     for i in range(3):
         a = start + i * 2 * np.pi / 3
         arc = np.linspace(a - np.radians(15), a + np.radians(15), 8)
-        poly = np.r_[np.c_[12.2 * np.cos(arc), 12.2 * np.sin(arc)], np.c_[8.4 * np.cos(arc[::-1]), 8.4 * np.sin(arc[::-1])]]
+        poly = np.r_[np.c_[LUG_RO * np.cos(arc), LUG_RO * np.sin(arc)], np.c_[LUG_RI * np.cos(arc[::-1]), LUG_RI * np.sin(arc[::-1])]]
         out.append(g.extrude(poly, [], z0, z1))
     return out
 
@@ -124,7 +127,7 @@ def chamfer(z0, z1, r0, r1, step=0.4):
     return [(zs[i], zs[i + 1], r0 + (r1 - r0) * (i + 1) / n) for i in range(n)]
 
 def collar():           # printed lugs-up; in the assembly the lugs face the dog gear (toward -Z)
-    prof = [(0, 2, 12.7), (2, 5.4, 9.5)] + chamfer(5.4, 8.6, 9.5, 12.7)
+    prof = [(0, 2, COLLAR_R), (2, 5.4, GROOVE_R)] + chamfer(5.4, 8.6, GROOVE_R, COLLAR_R)
     return g.concat(stack(prof, SLIDE) + lugs(COLLAR_BODY, COLLAR_BODY + LUG_H, start=np.pi / 3))
 
 def shaft(length):      # lying on a flat
@@ -139,6 +142,8 @@ def d_axle(length):     # lying on its flat
     lo, _ = m.bounds(); return m.translate(-lo)
 
 def end_cap():          return star_part(g.circle(0, 0, 10, 120), CAPB, 0, 6)
+
+def washer():           return star_part(g.circle(0, 0, WASHER_R, 96), FIX, 0, WASHER_L)   # glued behind each dog part so it can't drift into the collar
 
 def spacer(length):     return g.tube(10, 6.9 + c(0.35), 0, length, 96)   # round bore: slides over the hex corners
 SPACER_A = L2[0] - MIDDLE[1] - c(0.15)
@@ -198,16 +203,19 @@ def bridge():           # printed plate-down, legs up
 def fork():             # flat; in the assembly the slab is centred on the collar groove
     t = FORK_T
     arc = np.radians(np.linspace(25, 155, 30))
-    yoke = np.r_[np.c_[12.2 * np.cos(arc), 12.2 * np.sin(arc)], np.c_[(9.5 + c(0.5)) * np.cos(arc[::-1]), (9.5 + c(0.5)) * np.sin(arc[::-1])]]
-    return g.concat([g.extrude(yoke, [], 0, t), g.box(-4, 10.5, 0, 4, PLATE_TOP - 1.0, t),
-                     g.box(-1.8, PLATE_TOP - 1.2, 0, 1.8, PLATE_TOP + BAR_T - 0.6, t)])
+    ri, ro = GROOVE_R + c(0.5), COLLAR_R + 1.0
+    yoke = np.r_[np.c_[ro * np.cos(arc), ro * np.sin(arc)], np.c_[ri * np.cos(arc[::-1]), ri * np.sin(arc[::-1])]]
+    return g.concat([g.extrude(yoke, [], 0, t), g.box(-4, ro - 1.0, 0, 4, PLATE_TOP - 1.0, t),
+                     g.box(-t / 2, PLATE_TOP - 1.2, 0, t / 2, PLATE_TOP + BAR_T - 0.6, t)])   # square peg, t x t
 
 ENG = {'A': [1, 0, 0, 0], 'O2': [0, 0, 1, 0], 'O3': [0, 0, 0, 1]}            # bar positions: O1, N, O2, O3
 SLOT_Z = {k: [Z_GROOVE[k][0] if e else Z_GROOVE[k][1] for e in ENG[k]] for k in ENG}
 LUG_Z = {k: [Z_LUGBASE[k][0] if e else Z_LUGBASE[k][1] for e in ENG[k]] for k in ENG}
 BAR_X = (12.0, 293.0); BAR_Z = (MIDDLE[0] - 3.6, BACK[1] + 3.2)
 
-def slot_outline(pts, w=2.8, cap=10):
+SLOT_A = math.atan(TRAVEL / PITCH)
+SLOT_W = FORK_T * (math.cos(SLOT_A) + math.sin(SLOT_A)) + c(0.2)      # full slot width
+def slot_outline(pts, w=SLOT_W / 2, cap=10):
     pts = np.asarray(pts, float); left, right = [], []
     for i in range(len(pts)):
         dirs = []
@@ -227,7 +235,7 @@ def selector_bar_local():
     """Bar in assembly-local coords: polygon in (x, z), thickness along Y above the plate tops."""
     outer = np.array([[BAR_X[0], BAR_Z[0]], [BAR_X[1], BAR_Z[0]], [BAR_X[1], BAR_Z[1]], [BAR_X[0], BAR_Z[1]],
                       [BAR_X[0], 80.0], [-8.0, 80.0], [-8.0, 40.0], [BAR_X[0], 40.0]])
-    slots = [slot_outline([(X[k] + i * PITCH, SLOT_Z[k][i]) for i in range(4)]) for k in ('A', 'O2', 'O3')]
+    slots = [slot_outline([(X[k] - 1.5, SLOT_Z[k][0])] + [(X[k] + i * PITCH, SLOT_Z[k][i]) for i in range(4)] + [(X[k] + 3 * PITCH + 1.5, SLOT_Z[k][3])]) for k in ('A', 'O2', 'O3')]
     return outer, slots
 
 def selector_bar():     # printed top-face-down: (x, z) -> (X, Y), lips point up

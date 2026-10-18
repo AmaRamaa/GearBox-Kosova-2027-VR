@@ -16,7 +16,7 @@ Every part was checked in a virtual assembly at all four selector positions (Out
 | `bed_TPU_belt.3mf` | any | Optional belt ring in TPU (or use a 3 mm O-ring cord / rubber band) |
 
 Individual STLs are in `stl/` if you want to reprint one part.
-Total: 76 PLA parts, about 0.8 kg of PLA.
+Total: 79 PLA parts, about 0.8 kg of PLA.
 
 ## Slicer settings (Creality Print, K2 Plus, PLA, 0.4 mm nozzle)
 
@@ -42,12 +42,12 @@ Distances are measured from the **front end of each shaft**. "Glue" parts are fi
 
 | Shaft | Parts, front to back |
 | --- | --- |
-| A (108.6 mm) | 42T gear at 10.9 mm (glue), spacer (free), 66T dog pulley (free, lugs toward the back), collar (slides, lugs toward the pulley), end cap at the back |
+| A (108.6 mm) | 42T gear at 10.9 mm (glue), spacer (free), 66T dog pulley (free, lugs toward the back), washer (glue, against the pulley with a paper shim), collar (slides, lugs toward the pulley), end cap at the back |
 | B (108.6 mm) | 42T gear at 10.9 mm (glue), shifted 14T gear at 69.4 mm (glue), end cap at the back |
 | C (108.6 mm) | 42T gear at 10.9 mm (glue), shifted 14T gear at 36.3 mm (glue), end cap at the back |
 | I (81.2 mm) | 40T gear at 8.9 mm (glue), shifted 14T gear at 41.9 mm (glue), end cap at the back |
 | F (108 mm) | End cap at the front, 22T pulley at 15.5 mm (glue), flywheel at 87.0 mm (glue, after the back plate is on) |
-| Output 2 and 3 (86.9 mm each) | End cap in front of the bridge, spacer (free), 40T dog gear (free, lugs toward the back), collar (lugs toward the gear), spool at 53.5 mm (glue, after the back plate), end cap |
+| Output 2 and 3 (86.9 mm each) | End cap in front of the bridge, spacer (free), 40T dog gear (free, lugs toward the back), washer (glue, against the gear with a paper shim), collar (lugs toward the gear), spool at 53.5 mm (glue, after the back plate), end cap |
 | Motor axles (42.6 mm × 3, 33.6 mm × 1) | Pinion at 20.9 mm (glue). The short axle goes in the motor position furthest from the flywheel |
 
 ## Assembly

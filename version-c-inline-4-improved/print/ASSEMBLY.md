@@ -71,11 +71,12 @@ Shafts A, B and C are identical before gluing, so label them with a pen as you g
 - Push the 8 long pillars into the back face of the middle plate. The **shorter peg** goes into the middle plate.
 - Push the 2 bearing bridges into the two groups of 4 small holes. Their legs only fit one way round, with the flat plate facing back.
 
-## Step 6: Shaft A gets the spacer, dog pulley and collar
+## Step 6: Shaft A gets the spacer, dog pulley, washer and collar
 
 ![Step 6](guide/step_06.png)
 
-- Slide onto shaft A, behind the middle plate, in this order: the 5.6 mm spacer, the 66T dog pulley, then a collar.
+- Slide onto shaft A, behind the middle plate, in this order: the 5.6 mm spacer, the 66T dog pulley, a washer, then a collar.
+- **Glue the washer** right behind the pulley: push the pulley forward against the spacer, put a sheet of paper between pulley and washer, press the washer against it, add a drop of glue on the shaft side, and pull the paper out once it's set. The washer stops the pulley drifting back into the collar; the paper leaves just enough play for it to spin.
 - The pulley's 3 lugs face **back**, toward the collar. The collar's lugs face **forward**, toward the pulley.
 - The pulley must spin freely on the shaft; the collar must slide but turn with the shaft.
 
@@ -95,7 +96,8 @@ Do this twice: Output 2 uses the bridge next to shaft B, Output 3 the bridge at 
 
 1. From the back, push an output shaft through the bridge until about 6 mm sticks out in front of it.
 2. Put an end cap on that front end.
-3. From the back end, slide on the 7.5 mm spacer, a 40T dog gear (lugs facing **back**), then a collar (lugs facing **forward**).
+3. From the back end, slide on the 7.5 mm spacer, a 40T dog gear (lugs facing **back**), a washer, then a collar (lugs facing **forward**).
+   Glue the washer right behind the dog gear with the paper trick from step 6, so the gear spins but can't drift into the collar.
 4. Check the dog gear meshes: Output 2's with the 14T on shaft B, Output 3's with the 14T on shaft I.
 
 ## Step 9: Forks on the collars
@@ -103,6 +105,7 @@ Do this twice: Output 2 uses the bridge next to shaft B, Output 3 the bridge at 
 ![Step 9](guide/step_09.png)
 
 - Clip a fork into the groove of each of the 3 collars from above. The arm points straight up and the small square peg sits on top.
+- The collar's lugs pass around the outside of the washer, so the washer never blocks a shift.
 - Line all 3 pegs up so they stick up just above the plate edges. The selector bar catches them in step 13.
 
 ## Step 10: Back plate

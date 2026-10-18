@@ -1,6 +1,6 @@
 # Version C printable model: one-plate version (70% scale)
 
-The same hand-cranked model as the 1:1 version, scaled to **70%** so all 76 PLA parts fit on **one 350 × 350 mm bed** (Creality K2 Plus). 70% is the largest size that still fits on one bed.
+The same hand-cranked model as the 1:1 version, scaled to **70%** so all 79 PLA parts fit on **one 350 × 350 mm bed** (Creality K2 Plus). 70% is the largest size that still fits on one bed.
 
 **Fits are not scaled.** The model is built at 1:1 with every clearance divided by 0.7, then scaled down, so each slip fit, sliding fit and peg hole has the same real clearance (in mm) as the full-size model. The scaled parts passed the same collision check at all 4 selector positions.
 
@@ -10,7 +10,7 @@ The same hand-cranked model as the 1:1 version, scaled to **70%** so all 76 PLA 
 
 | File | What it is |
 | --- | --- |
-| `bed_one_plate_PLA_70pct.3mf` | All 76 PLA parts, oriented and placed on one bed |
+| `bed_one_plate_PLA_70pct.3mf` | All 79 PLA parts, oriented and placed on one bed |
 | `bed_TPU_belt_70pct.3mf` | Optional TPU belt ring (a rubber band or 2 mm cord loop works too) |
 | `stl/` | Every part on its own, already at 70% |
 | `guide/` | Parts sheet and gluing diagram with the 70% measurements |
@@ -44,6 +44,7 @@ Follow the [full-size assembly guide](../ASSEMBLY.md). The steps and pictures ar
 | Spool on each output | 53.5 mm | 37.5 mm |
 | Pinion on each motor axle | 20.9 mm | 14.7 mm |
 | Spacers (A / outputs) | 5.6 / 7.5 mm | 3.9 / 5.2 mm |
+| Washer behind the dog pulley / each dog gear | glued against it with a paper shim | same |
 | Selector bar step | 11.4 mm | 8.0 mm |
 
 All distances are measured from the front end of the shaft to the front face of the part. The [gluing diagram](guide/step_01_gluing.png) shows them on each shaft.

@@ -21,9 +21,9 @@ LABEL = {
  'shaft_ABC': 'Shaft A / B / C  108.6 mm', 'shaft_F': 'Shaft F  108 mm', 'shaft_I': 'Shaft I  81.2 mm', 'shaft_O2_O3': 'Output shaft  86.9 mm',
  'axle_M1_M3': 'Motor axle  42.6 mm', 'axle_M4': 'Short motor axle  33.6 mm', 'crank_disc_handle': 'Crank disc + handle',
  'crank_disc': 'Motor disc', 'end_cap': 'End cap', 'spacer_A': 'Spacer 5.6 mm', 'spacer_O2_O3': 'Spacer 7.5 mm',
- 'flywheel': 'Flywheel', 'spool': 'Spool', 'belt_ring_TPU': 'Belt ring (TPU, optional)'}
+ 'flywheel': 'Flywheel', 'spool': 'Spool', 'washer': 'Washer (glue)', 'belt_ring_TPU': 'Belt ring (TPU, optional)'}
 ORDER = ['gear_42T', 'pinion_14T', 'gear_14T_shifted', 'gear_40T', 'gear_40T_dog', 'pulley_66T_dog', 'pulley_22T', 'collar',
-         'fork', 'spacer_A', 'spacer_O2_O3', 'end_cap', 'shaft_ABC', 'shaft_F', 'shaft_I', 'shaft_O2_O3', 'axle_M1_M3', 'axle_M4',
+         'fork', 'spacer_A', 'spacer_O2_O3', 'washer', 'end_cap', 'shaft_ABC', 'shaft_F', 'shaft_I', 'shaft_O2_O3', 'axle_M1_M3', 'axle_M4',
          'pillar_front', 'pillar_back', 'bridge', 'crank_disc_handle', 'crank_disc', 'flywheel', 'spool', 'belt_ring_TPU',
          'plate_front', 'plate_middle', 'plate_back', 'selector_bar']
 COL = {'gear': '#e8590c', 'pinion': '#e8590c', 'pulley': '#c92a2a', 'collar': '#1971c2', 'fork': '#1971c2', 'selector': '#2f9e44'}
@@ -50,7 +50,7 @@ for n in ORDER:
 cols, cw, ch = 5, 250, 215
 rows = math.ceil(len(cells) / cols)
 sheet = Image.new('RGB', (cols * cw + 20, rows * ch + 70), 'white'); d = ImageDraw.Draw(sheet)
-d.text((16, 14), 'Parts list: 76 PLA parts + optional TPU belt', fill=(21, 32, 42), font=font(24, True))
+d.text((16, 14), 'Parts list: 79 PLA parts + optional TPU belt', fill=(21, 32, 42), font=font(24, True))
 for i, (im, lab, q) in enumerate(cells):
     x = 10 + (i % cols) * cw; y = 60 + (i // cols) * ch
     d.rounded_rectangle((x + 4, y + 4, x + cw - 4, y + ch - 4), 10, outline=(204, 212, 220), width=2)
@@ -66,14 +66,14 @@ def seg(z0, z1, start): return (z0 - start, z1 - start)
 SHAFTS = [
  ('Shaft A (×1)  108.6 mm', -5.85, 108.64, [
     ('42T', 5.08, 17.78, 55.9, GLUE), ('spacer', p.MIDDLE[1] + 0.05, p.MIDDLE[1] + 0.05 + p.SPACER_A, 20, FREE),
-    ('66T dog pulley', 30.48, 45.18, 67, FREE), ('collar', 43.58, 54.18, 25.4, FREE), ('cap', 97.99, 102.79, 20, CAP)]),
+    ('66T dog pulley', 30.48, 45.18, 67, FREE), ('washer', 43.39, 44.99, 19.8, GLUE), ('collar', 43.58, 54.18, 29.2, FREE), ('cap', 97.99, 102.79, 20, CAP)]),
  ('Shaft B (×1)  108.6 mm', -5.85, 108.64, [('42T', 5.08, 17.78, 55.9, GLUE), ('14T shifted', 63.5, 76.2, 22, GLUE), ('cap', 97.99, 102.79, 20, CAP)]),
  ('Shaft C (×1)  108.6 mm', -5.85, 108.64, [('42T', 5.08, 17.78, 55.9, GLUE), ('14T shifted', 30.48, 43.18, 22, GLUE), ('cap', 97.99, 102.79, 20, CAP)]),
  ('Shaft I (×1)  81.2 mm', 21.59, 81.2, [('40T', 30.48, 43.18, 53.3, GLUE), ('14T shifted', 63.5, 76.2, 22, GLUE), ('cap', 97.99, 102.79, 20, CAP)]),
  ('Shaft F (×1)  108 mm', 15.0, 108.0, [('cap', 15.39, 21.39, 20, CAP), ('22T pulley', 30.48, 43.18, 25, GLUE),
     ('flywheel', 102.0, 117.0, 101.6, GLUE), ('cap', 117.2, 123.0, 20, CAP)]),
- ('Output shaft (×2)  86.9 mm', 44.8, 86.9, [('cap', 44.8, 50.6, 20, CAP), ('spacer', 55.93, 63.4, 20, FREE), ('40T dog', 63.5, 78.2, 53.3, FREE),
-    ('collar', 76.6, 87.2, 25.4, FREE), ('spool', 98.3, 125.3, 45.7, GLUE), ('cap', 125.5, 131.7, 20, CAP)]),
+ ('Output shaft (×2)  86.9 mm', 44.8, 86.9, [('cap', 44.8, 50.6, 20, CAP), ('spacer', 55.93, 63.4, 20, FREE), ('40T dog', 63.5, 78.2, 53.3, FREE), ('washer', 76.41, 78.01, 19.8, GLUE),
+    ('collar', 76.6, 87.2, 29.2, FREE), ('spool', 98.3, 125.3, 45.7, GLUE), ('cap', 125.5, 131.7, 20, CAP)]),
  ('Motor axle (×3 long, ×1 short)', -15.85, 42.62, [('disc', -15.85, -6.85, 60, CAP), ('14T pinion', 5.08, 17.78, 20.3, GLUE)]),
 ]
 fig, axes = plt.subplots(len(SHAFTS), 1, figsize=(12, 2.35 * len(SHAFTS)), dpi=130)

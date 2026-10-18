@@ -46,6 +46,7 @@ P['spacer_A'] = (p.spacer(p.SPACER_A), 1)
 P['spacer_O2_O3'] = (p.spacer(p.SPACER_O), 2)
 P['flywheel'] = (p.flywheel(), 1)
 P['spool'] = (p.spool(), 2)
+P['washer'] = (p.washer(), 3)
 P['belt_ring_TPU'] = (p.belt_ring(), 1)
 
 if p.S != 1:   # export scale (fits were already compensated in parts.py)
@@ -115,6 +116,9 @@ def assembly(pos):
     A.append(('flywheel', P['flywheel'][0].translate((X['F'], 0, 102.0))))
     A.append(('spacer_A', P['spacer_A'][0].translate((X['A'], 0, p.MIDDLE[1] + 0.05))))
     for o in ('O2', 'O3'): A.append((f'spacer_{o}', P['spacer_O2_O3'][0].translate((X[o], 0, p.BRIDGE[1] + 0.05))))
+    # retaining washers, glued right behind the lug face of each dog part
+    A.append(('washer_A', P['washer'][0].transform(g.rot_z(thA), (X['A'], 0, p.L2[1] + p.c(0.15)))))
+    for o in ('O2', 'O3'): A.append((f'washer_{o}', P['washer'][0].transform(g.rot_z(dang[o]), (X[o], 0, p.L3[1] + p.c(0.15)))))
     for o in ('O2', 'O3'):
         A.append((f'spool_{o}', P['spool'][0].transform(g.rot_z(dang[o]), (X[o], 0, 98.3))))
     ang = {'A': thA, 'B': thB, 'C': thC, 'F': 0.0, 'I': thI, 'O2': dang['O2'], 'O3': dang['O3']}
